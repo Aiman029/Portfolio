@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en" x-data="projectsApp()" :class="{'dark': dark}" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects &bull; Muhammad Aiman Hafiz | Software Engineering</title>
+    <meta name="description"
+        content="Complete project portfolio of Muhammad Aiman Hafiz Bin Rosli - Software Engineering undergraduate at UPSI. Featuring Flutter mobile applications, Laravel web platforms, and MySQL system architectures." />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=2" />
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png?v=2" />
+    <link rel="shortcut icon" href="../assets/favicon.ico?v=2" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+        rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Montserrat', 'sans-serif'],
+                        body: ['DM Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        accent: '#FF6B2B',
+                        'accent-light': '#FF8F5C',
+                        'accent-dark': '#E55315'
+                    },
+                    transitionTimingFunction: {
+                        'smooth': 'cubic-bezier(0.16, 1, 0.3, 1)',
+                    },
+                    transitionDuration: {
+                        '180': '180ms',
+                        '240': '240ms',
+                        '280': '280ms',
+                        '320': '320ms',
+                        '350': '350ms'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="../css/style.css?v=2.6" />
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-body antialiased selection:bg-accent selection:text-white transition-colors duration-300 relative min-h-screen">
+
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        :class="scrolled ? 'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5' : 'bg-transparent'">
+        <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+            <a href="../index.html" class="font-display font-bold text-xl tracking-tight z-10 flex items-center gap-2.5 group">
+                <img src="../assets/favicon-192.png" alt="Muhammad Aiman Hafiz" class="w-8 h-8 rounded-full border border-accent/40 shadow-sm object-cover group-hover:scale-105 transition-transform" />
+                <span class="flex items-center"><span class="text-zinc-900 dark:text-white">aiman</span><span class="text-accent">.hafiz</span></span>
+            </a>
+
+            <ul class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <li><a href="../index.html#tech-stack" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Tech Stack</a></li>
+                <li><a href="projects.html" class="nav-link active text-accent font-medium">Projects</a></li>
+                <li><a href="../index.html#about" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">About</a></li>
+                <li><a href="../index.html#certifications" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Certifications</a></li>
+                <li><a href="../index.html#education" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Education</a></li>
+            </ul>
+
+            <div class="flex items-center gap-3">
+                <button @click="toggleTheme()"
+                    class="w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+                    :aria-label="dark ? 'Switch to light mode' : 'Switch to dark mode'">
+                    <svg x-show="!dark" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                    </svg>
+                    <svg x-show="dark" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                    </svg>
+                </button>
+
+                <a href="../assets/resume-muhammad-aiman-hafiz.pdf" target="_blank" download="Resume_Muhammad_Aiman_Hafiz.pdf"
+                    class="hidden md:inline-flex items-center gap-1.5 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:text-accent dark:hover:text-accent hover:border-accent text-sm font-medium px-4 py-2 rounded-full transition-colors"
+                    title="Download Muhammad Aiman Hafiz Resume (PDF)">
+                    <svg class="w-3.5 h-3.5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Resume</span>
+                </a>
+
+                <button @click="mobileMenu = !mobileMenu"
+                    class="md:hidden w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800"
+                    aria-label="Toggle navigation menu">
+                    <svg x-show="!mobileMenu" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg x-show="mobileMenu" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <div x-show="mobileMenu" x-cloak
+            x-transition:enter="transition duration-240 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            x-transition:enter-start="opacity-0 -translate-y-3 scale-[0.98]"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+            x-transition:leave="transition duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+            x-transition:leave-end="opacity-0 -translate-y-2 scale-[0.98]"
+            class="md:hidden bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900 px-6 py-4 space-y-3 origin-top will-change-transform">
+            <a href="../index.html#tech-stack" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">Tech Stack</a>
+            <a href="projects.html" class="block text-accent font-medium">Projects</a>
+            <a href="../index.html#about" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">About</a>
+            <a href="../index.html#certifications" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">Certifications</a>
+            <a href="../index.html#education" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">Education</a>
+            <div class="pt-2 border-t border-zinc-100 dark:border-zinc-900 flex flex-col gap-2">
+                <a href="../assets/resume-muhammad-aiman-hafiz.pdf" target="_blank" download="Resume_Muhammad_Aiman_Hafiz.pdf"
+                    @click="mobileMenu = false"
+                    class="inline-flex items-center justify-center gap-2 border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 font-medium text-sm px-5 py-2.5 rounded-full hover:border-accent">
+                    <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Download CV (PDF)</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="scroll-progress-track" aria-hidden="true">
+            <div class="scroll-progress-bar" :style="`transform: scaleX(${scrollProgress})`"></div>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <section class="pt-36 pb-12 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+            <div class="max-w-6xl mx-auto px-6 relative z-10">
+                <p class="text-xs font-medium text-accent tracking-widest uppercase mb-3">Portfolio &bull; Technical Index</p>
+                <h1 class="font-display font-bold text-5xl md:text-6xl text-zinc-900 dark:text-white leading-tight mb-4">
+                    All Projects
+                </h1>
+                <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed mb-8">
+                    An architectural catalog of software systems, interactive educational games, mobile clients, and relational backends developed during my Bachelor of Software Engineering at UPSI.
+                </p>
+
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <template x-for="tab in filterTabs" :key="tab.id">
+                        <button type="button" @click="activeFilter = tab.id"
+                            :class="activeFilter === tab.id ? 'bg-accent text-white border-accent shadow-sm' : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:border-accent'"
+                            class="text-sm px-4 py-2 rounded-full border transition-all duration-150 font-medium"
+                            x-text="tab.label">
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <section class="pb-28">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <template x-for="p in projects" :key="p.id">
+                        <div x-show="activeFilter === 'all' || p.category === activeFilter || (p.categories && p.categories.includes(activeFilter))"
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95">
+
+                            <article class="project-card group h-full rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/90 hover:border-accent flex flex-col justify-between">
+                                <div>
+                                    <div class="photo-frame w-full h-52">
+                                        <img :src="p.image" :alt="p.title" loading="lazy" />
+                                        <div class="absolute top-3 right-3 z-10">
+                                            <span class="badge-status text-[11px]"
+                                                :class="{
+                                                    'badge-status-live': p.status && p.status.includes('Live'),
+                                                    'badge-status-prototype': p.status && (p.status.includes('Prototype') || p.status.includes('WIP') || p.status.includes('Ongoing')),
+                                                    'badge-status-capstone': p.status && (p.status.includes('DEP') || p.status.includes('Playable')),
+                                                    'badge-status-fyp': p.status && p.status.includes('FYP') && !p.status.includes('Prototype') && !p.status.includes('Ongoing'),
+                                                    'badge-status-opensource': p.status && (p.status.includes('Open Source') || p.status.includes('Active')),
+                                                    'badge-status-academic': p.status && p.status.includes('Academic')
+                                                }">
+                                                <span class="status-ping" aria-hidden="true"><span class="ping-ring"></span><span class="ping-dot"></span></span>
+                                                <span x-text="p.status"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-6">
+                                        <div class="flex flex-wrap gap-1.5 mb-3">
+                                            <template x-for="tag in p.tags" :key="tag">
+                                                <span class="text-xs px-2.5 py-1 rounded-full font-medium"
+                                                    :class="tag === p.primaryTag ? 'bg-orange-50 dark:bg-accent/15 text-accent border border-orange-200 dark:border-accent/30' : 'bg-zinc-200/70 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-400'"
+                                                    x-text="tag"></span>
+                                            </template>
+                                        </div>
+
+                                        <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white group-hover:text-accent transition-colors mb-2"
+                                            x-text="p.title"></h3>
+
+                                        <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed"
+                                            x-text="p.summary"></p>
+                                    </div>
+                                </div>
+
+                                <div class="p-6 pt-0 flex flex-wrap items-center justify-between gap-2">
+                                    <button type="button" @click="openModal(p)"
+                                        class="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-900 dark:text-white hover:text-accent dark:hover:text-accent transition-colors">
+                                        <span>Architecture &rarr;</span>
+                                    </button>
+                                    <div class="flex items-center gap-3">
+                                        <template x-if="p.caseStudyPage">
+                                            <a :href="p.caseStudyPage"
+                                                class="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline">
+                                                <span>Case Study</span>
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                                </svg>
+                                            </a>
+                                        </template>
+                                        <template x-if="p.liveUrl">
+                                            <a :href="p.liveUrl" target="_blank" rel="noopener noreferrer"
+                                                class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline">
+                                                <span x-text="p.liveLabel || 'Live'"></span>
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                </svg>
+                                            </a>
+                                        </template>
+                                        <template x-if="p.githubUrl">
+                                            <a :href="p.githubUrl" target="_blank" rel="noopener noreferrer"
+                                                class="inline-flex items-center gap-1 text-xs font-mono text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                                                <span>GitHub</span>
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                </svg>
+                                            </a>
+                                        </template>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </template>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="py-20 border-t border-zinc-100 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-900/40">
+            <div class="max-w-4xl mx-auto px-6 text-center space-y-6">
+                <p class="text-xs font-medium text-accent tracking-widest uppercase">Looking for an intern?</p>
+                <h2 class="font-display font-bold text-3xl md:text-4xl text-zinc-900 dark:text-white">
+                    Need technical details or a live code demonstration?
+                </h2>
+                <p class="text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+                    I am actively seeking an industrial internship placement for 15 Feb &ndash; 15 Ogos 2027. Source code repositories and design schematics can be walked through during interviews.
+                </p>
+                <div class="pt-2 flex flex-wrap justify-center items-center gap-3">
+                    <button type="button" @click="copyEmail()"
+                        class="btn-shimmer inline-flex items-center gap-2 bg-accent text-white font-medium text-sm px-7 py-3 rounded-full hover:bg-accent-light transition-colors cursor-pointer shadow-lg shadow-accent/20"
+                        title="Copy m.aimanhafiz27@gmail.com to clipboard">
+                        <svg x-show="!emailCopied" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <svg x-show="emailCopied" x-cloak class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span x-text="emailCopied ? 'Copied to Clipboard!' : 'Copy Email Address'">Copy Email Address</span>
+                    </button>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=m.aimanhafiz27@gmail.com&su=Internship%20Discussion%20-%20Muhammad%20Aiman%20Hafiz"
+                        target="_blank" rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 hover:border-accent text-zinc-700 dark:text-zinc-300 hover:text-accent dark:hover:text-accent font-medium text-sm px-6 py-3 rounded-full hover:bg-white dark:hover:bg-zinc-800 transition-colors">
+                        <svg class="w-4 h-4 text-[#EA4335]" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                        </svg>
+                        <span>Open in Gmail &nearr;</span>
+                    </a>
+                    <a href="../index.html"
+                        class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium text-sm px-6 py-3 rounded-full hover:bg-white dark:hover:bg-zinc-800 transition-colors">
+                        <span>&larr; Back to Portfolio</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-zinc-200/80 dark:border-zinc-900 py-10 text-xs text-zinc-500 dark:text-zinc-400">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                &copy; 2026 Muhammad Aiman Hafiz Bin Rosli &bull; Bachelor of Software Engineering (Hons), UPSI
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="../index.html" class="hover:text-accent transition-colors">Home</a>
+                <a href="projects.html" class="hover:text-accent transition-colors">Projects</a>
+                <a href="../assets/resume-muhammad-aiman-hafiz.pdf" target="_blank" download="Resume_Muhammad_Aiman_Hafiz.pdf" class="hover:text-accent transition-colors">Resume (PDF)</a>
+            </div>
+        </div>
+    </footer>
+
+    <div x-show="modalOpen" x-cloak
+        x-transition:enter="transition duration-240 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 sm:px-6 py-6 overflow-y-auto">
+
+        <div @click.away="modalOpen = false"
+            x-show="modalOpen"
+            x-transition:enter="transition duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+            class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative space-y-6 my-auto text-zinc-900 dark:text-zinc-100 max-h-[90vh] overflow-y-auto will-change-transform">
+
+            <div class="flex justify-between items-start gap-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-accent" x-text="activeProject?.categoryLabel"></span>
+                        <span class="text-zinc-400">&bull;</span>
+                        <span class="text-xs font-mono text-emerald-600 dark:text-emerald-400" x-text="activeProject?.status"></span>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mt-1" x-text="activeProject?.title"></h3>
+                    <p class="text-xs text-zinc-500 dark:text-zinc-400 font-mono mt-0.5" x-text="activeProject?.subtitle"></p>
+                </div>
+
+                <button @click="modalOpen = false" type="button" aria-label="Close dialog"
+                    class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-5 text-sm">
+                <template x-if="activeProject?.academic">
+                    <div class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-xs text-amber-950 dark:text-amber-200 flex items-start gap-2.5">
+                        <svg class="w-4 h-4 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        </svg>
+                        <div class="leading-relaxed">
+                            <span class="font-bold text-zinc-900 dark:text-white" x-text="activeProject.academic.course"></span> &bull;
+                            <span x-text="activeProject.academic.institution"></span> &bull;
+                            <span class="text-zinc-600 dark:text-zinc-400" x-text="'Supervisor: ' + activeProject.academic.supervisor"></span>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="activeProject?.roles">
+                    <div class="space-y-3 pb-3 border-b border-zinc-100 dark:border-zinc-800">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h4 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-mono">System Portals &amp; Role Separation</h4>
+                            <div class="inline-flex p-1 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/80 text-xs">
+                                <button type="button" @click="activeRoleView = 'user'"
+                                    :class="activeRoleView === 'user' ? 'bg-white dark:bg-zinc-900 text-accent font-semibold shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'"
+                                    class="px-3 py-1 rounded-lg transition-all flex items-center gap-1.5">
+                                    <span>Customer View</span>
+                                </button>
+                                <button type="button" @click="activeRoleView = 'admin'"
+                                    :class="activeRoleView === 'admin' ? 'bg-white dark:bg-zinc-900 text-accent font-semibold shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'"
+                                    class="px-3 py-1 rounded-lg transition-all flex items-center gap-1.5">
+                                    <span>Admin Portal</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div x-show="activeRoleView === 'user'" class="space-y-2">
+                            <div class="rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800/50 shadow-inner">
+                                <img :src="activeProject.roles.user.image" alt="Customer Portal Experience" class="w-full h-56 sm:h-64 object-cover object-top" />
+                            </div>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed" x-text="activeProject.roles.user.description"></p>
+                        </div>
+
+                        <div x-show="activeRoleView === 'admin'" class="space-y-2">
+                            <div class="rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800/50 shadow-inner">
+                                <img :src="activeProject.roles.admin.image" alt="Admin Dashboard Management" class="w-full h-56 sm:h-64 object-cover object-top" />
+                            </div>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed" x-text="activeProject.roles.admin.description"></p>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="activeProject?.screens">
+                    <div class="space-y-3 pb-3 border-b border-zinc-100 dark:border-zinc-800">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h4 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-mono" x-text="activeProject.screensTitle || 'System Screens &amp; Modules'"></h4>
+                            <div class="flex flex-wrap gap-1 p-1 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/80 text-xs">
+                                <template x-for="(screen, key) in activeProject.screens" :key="key">
+                                    <button type="button" @click="activeScreenKey = key"
+                                        :class="activeScreenKey === key ? 'bg-white dark:bg-zinc-900 text-accent font-semibold shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'"
+                                        class="px-2.5 py-1 rounded-lg transition-all"
+                                        x-text="screen.tabLabel || screen.title">
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                        <template x-if="activeProject.screens && activeProject.screens[activeScreenKey]">
+                            <div class="space-y-2">
+                                <div class="rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800/50 shadow-inner">
+                                    <img :src="activeProject.screens[activeScreenKey].image" :alt="activeProject.screens[activeScreenKey].title" class="w-full h-56 sm:h-72 object-cover object-top" />
+                                </div>
+                                <div class="flex items-center justify-between gap-2">
+                                    <p class="text-xs font-semibold text-zinc-900 dark:text-white" x-text="activeProject.screens[activeScreenKey].title"></p>
+                                </div>
+                                <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed" x-text="activeProject.screens[activeScreenKey].description"></p>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <template x-if="!activeProject?.roles && !activeProject?.screens && activeProject?.image">
+                    <div class="rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800/50">
+                        <img :src="activeProject.image" :alt="activeProject.title" class="w-full h-48 object-cover object-center" />
+                    </div>
+                </template>
+
+                <div>
+                    <h4 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-1.5 font-mono">System Overview</h4>
+                    <p class="text-zinc-700 dark:text-zinc-300 leading-relaxed" x-text="activeProject?.overview"></p>
+                </div>
+
+                <div class="pt-3 border-t border-zinc-100 dark:border-zinc-800">
+                    <h4 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2 font-mono">Key Architectural Decisions</h4>
+                    <ul class="space-y-2 text-xs text-zinc-700 dark:text-zinc-300">
+                        <template x-for="item in activeProject?.highlights" :key="item">
+                            <li class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span x-text="item"></span>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+
+                <template x-if="activeProject?.architecture">
+                    <div class="pt-3 border-t border-zinc-100 dark:border-zinc-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-mono">Architecture &amp; Engineering Synopsis</h4>
+                            <span class="text-[11px] font-mono text-zinc-400" x-text="activeProject.architecture.scope || ''"></span>
+                        </div>
+                        <p class="text-zinc-700 dark:text-zinc-300 text-xs leading-relaxed" x-text="activeProject.architecture.synopsis || activeProject.architecture.overview"></p>
+
+                        <template x-if="activeProject.architecture.subsystems">
+                            <div class="grid sm:grid-cols-2 gap-2 pt-1">
+                                <template x-for="(subsystem, idx) in activeProject.architecture.subsystems" :key="idx">
+                                    <div class="flex items-start gap-2 p-2 rounded-xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200/60 dark:border-zinc-700/50 text-[11px] text-zinc-700 dark:text-zinc-300">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                                        <span x-text="subsystem"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <div class="pt-3 border-t border-zinc-100 dark:border-zinc-800">
+                    <h4 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2 font-mono">Technologies &amp; Libraries</h4>
+                    <div class="flex flex-wrap gap-1.5">
+                        <template x-for="tech in activeProject?.stack" :key="tech">
+                            <span class="px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-[11px] font-mono font-medium text-zinc-800 dark:text-zinc-300"
+                                x-text="tech"></span>
+                        </template>
+                    </div>
+                </div>
+
+                <template x-if="activeProject?.team">
+                    <div class="pt-3 border-t border-zinc-100 dark:border-zinc-800">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-mono">Team Collaboration &amp; Role Division</h4>
+                            <span class="text-[11px] font-mono text-zinc-500" x-text="(activeProject.team ? activeProject.team.length : 0) + ' Members'"></span>
+                        </div>
+                        <div class="space-y-2.5">
+                            <template x-for="member in activeProject.team" :key="member.name">
+                                <div class="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200/70 dark:border-zinc-700/60 text-xs">
+                                    <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-zinc-900 dark:text-white" x-text="member.name"></span>
+                                            <span class="text-[10px] font-mono text-zinc-400" x-text="member.matric ? '(' + member.matric + ')' : ''"></span>
+                                        </div>
+                                        <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-accent/10 text-accent font-medium" x-text="member.role"></span>
+                                    </div>
+                                    <p class="text-zinc-600 dark:text-zinc-400 text-xs leading-relaxed" x-text="member.contribution"></p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <div class="p-4 rounded-2xl bg-orange-50 dark:bg-zinc-800/70 border border-orange-200/80 dark:border-zinc-700 text-xs text-zinc-700 dark:text-zinc-300 flex items-start gap-3">
+                    <svg class="w-4 h-4 text-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                        <span class="font-bold text-zinc-900 dark:text-white">Technical Review Note:</span>
+                        Full Git repository, commit histories, and system diagrams are organized for academic evaluation. Walkthrough available upon interview request.
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-2">
+                    <template x-if="activeProject?.caseStudyPage">
+                        <a :href="activeProject.caseStudyPage"
+                            class="inline-flex items-center gap-1.5 bg-accent hover:bg-accent-light text-white font-medium text-xs px-4 py-2 rounded-full transition-colors">
+                            <span>Read Case Study</span>
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </template>
+                    <template x-if="activeProject?.liveUrl">
+                        <a :href="activeProject.liveUrl" target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs px-4 py-2 rounded-full transition-colors">
+                            <span x-text="activeProject?.liveLabel || 'Open Live Website'"></span>
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </template>
+                    <template x-if="activeProject?.caseStudyUrl">
+                        <a :href="activeProject.caseStudyUrl" target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1.5 border border-zinc-300 dark:border-zinc-700 hover:border-accent text-zinc-800 dark:text-zinc-200 font-medium text-xs px-4 py-2 rounded-full transition-colors">
+                            <span>Canva Deck</span>
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </template>
+                    <template x-if="activeProject?.githubUrl">
+                        <a :href="activeProject.githubUrl" target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1.5 border border-zinc-300 dark:border-zinc-700 hover:border-accent text-zinc-800 dark:text-zinc-200 font-medium text-xs px-4 py-2 rounded-full transition-colors">
+                            <span>GitHub Repo</span>
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </template>
+                </div>
+                <button type="button" @click="modalOpen = false"
+                    class="px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-700 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function projectsApp() {
+            return {
+                dark: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+                scrolled: false,
+                scrollProgress: 0,
+                mobileMenu: false,
+                activeFilter: 'all',
+                modalOpen: false,
+                activeProject: null,
+                activeRoleView: 'user',
+                activeScreenKey: null,
+                emailCopied: false,
+
+                copyEmail() {
+                    const email = 'm.aimanhafiz27@gmail.com';
+                    if (navigator.clipboard && window.isSecureContext) {
+                        navigator.clipboard.writeText(email).then(() => {
+                            this.emailCopied = true;
+                            setTimeout(() => { this.emailCopied = false; }, 2500);
+                        }).catch(() => this.fallbackCopy(email));
+                    } else {
+                        this.fallbackCopy(email);
+                    }
+                },
+
+                fallbackCopy(text) {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-999999px';
+                    textArea.style.top = '-999999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        this.emailCopied = true;
+                        setTimeout(() => { this.emailCopied = false; }, 2500);
+                    } catch (err) {
+                        console.error('Copy fallback failed', err);
+                    }
+                    document.body.removeChild(textArea);
+                },
+
+                toggleTheme() {
+                    this.dark = !this.dark;
+                    localStorage.setItem('theme', this.dark ? 'dark' : 'light');
+                    if (this.dark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                },
+
+                openModal(project) {
+                    this.activeProject = project;
+                    this.activeRoleView = 'user';
+                    this.activeScreenKey = project.screens ? Object.keys(project.screens)[0] : null;
+                    this.modalOpen = true;
+                },
+
+                init() {
+                    const updateScroll = () => {
+                        const winScroll = window.scrollY || document.documentElement.scrollTop;
+                        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                        this.scrolled = winScroll > 20;
+                        this.scrollProgress = height > 0 ? Math.min(1, Math.max(0, winScroll / height)) : 0;
+                    };
+                    window.addEventListener('scroll', updateScroll, { passive: true });
+                    window.addEventListener('resize', updateScroll, { passive: true });
+                    updateScroll();
+                },
+
+                filterTabs: [
+                    { id: 'all', label: 'All Projects' },
+                    { id: 'game', label: 'Game & Interactive (C#)' },
+                    { id: 'mobile', label: 'Mobile Apps (Flutter)' },
+                    { id: 'web', label: 'Web & Backend (PHP / Laravel)' },
+                    { id: 'systems', label: 'Database & Systems' }
+                ],
+
+                projects: [
+                    {
+                        id: 7,
+                        title: 'RRH: Learn The Tale, Master The Quiz',
+                        subtitle: 'Interactive C# Educational Game & Mnemonic Learning Engine',
+                        category: 'game',
+                        categoryLabel: 'Educational Game / C#',
+                        primaryTag: 'C# / Unity',
+                        status: 'Playable on itch.io',
+                        tags: ['C#', 'State Pattern', 'Educational Tech', 'Dual Coding', 'Mnemonic Engine'],
+                        image: '../assets/rrh/rrh-main-menu.png',
+                        liveUrl: 'https://jason0912.itch.io/rrh-ltl-mtq',
+                        liveLabel: 'Play on itch.io',
+                        caseStudyUrl: 'https://www.canva.com/design/DAGqYOAO-ss/VwNRAfGRcbblZN5iuuK_2g/edit',
+                        caseStudyPage: 'rrh-case-study.html',
+                        summary: 'Interactive 2D educational game in C# engineered for the Development of Educational Package (DEP) curriculum. Combines animated fairy tale storytelling with dual coding theory, an acronym-based mnemonic framework ("R-I-D-I-N-G"), and progressive difficulty multiple-choice quizzes to foster reading comprehension and moral reasoning.',
+                        overview: 'Developed as a collaborative educational package fusing Paivio\'s Dual Coding Theory and cognitive chunking. Features a decoupled C# Finite State Machine orchestrating story narration, animated sprites, voiceover audio synchronization, and an adaptive quiz engine with instant score evaluation.',
+                        highlights: [
+                            'Engineered modular C# Finite State Machine orchestrating decoupled game scenes (Menu, Story, Mnemonic, Quiz, Results).',
+                            'Built dynamic Quiz Evaluation System with question pool randomization, Fisher-Yates button shuffling, and 3 difficulty tiers.',
+                            'Implemented synchronized media playback controller bridging narration voiceover, sprite timing, and accessibility subtitles.',
+                            'Validated with primary school learners achieving an 85%+ retention rate compared to static text reading.'
+                        ],
+                        stack: ['C#', 'Game Engine Architecture', 'Finite State Machine', 'WebGL / HTML5', 'Audio & Subtitle Sync', 'Pedagogical UX']
+                    },
+                    {
+                        id: 1,
+                        title: 'UniWise: Educational Recommendation System',
+                        subtitle: 'SPM Academic Eligibility & RIASEC Personality Matching Engine',
+                        category: 'web',
+                        categories: ['web', 'systems'],
+                        categoryLabel: 'Full-Stack Web & Recommendation Engine',
+                        primaryTag: 'React & Laravel',
+                        status: 'Ongoing • FYP',
+                        tags: ['React.js', 'Laravel', 'MySQL', 'Firebase Auth', 'RIASEC Engine', 'Ongoing FYP'],
+                        image: '../assets/uniwise-cover.jpg',
+                        summary: 'A web-based personalised educational recommendation platform developed to assist Malaysian SPM graduates in discovering eligible public university (IPTA) programmes through RIASEC personality profiling and rule-based academic merit matching.',
+                        overview: 'Final Year Project (FYP) for Bachelor of Software Engineering (Educational Software) at Universiti Pendidikan Sultan Idris (UPSI), supervised by Dr Harnani Binti Mat Zin. The system features a decoupled React frontend and Laravel REST API backend with Firebase Authentication, assessing SPM academic results alongside Holland RIASEC vocational traits to provide rule-based recommendations for Diploma, Foundation, and Certificate programmes.',
+                        highlights: [
+                            'Engineered rule-based recommendation algorithm evaluating SPM stream subjects, grade points, and Holland RIASEC personality traits.',
+                            'Architected decoupled client-server model using React.js, Laravel REST API, and normalized MySQL relational database.',
+                            'Implemented Firebase Authentication with backend token verification for secure user registration and role-based access.',
+                            'Structured automated session snapshots logging evaluation timestamps, merit percentages, dominant RIASEC codes, and generated programme lists for historical audit trails.'
+                        ],
+                        stack: ['React.js', 'Laravel', 'MySQL', 'Firebase Auth', 'RESTful API', 'Holland RIASEC', 'Rule-Based Engine', 'SRS v1.0']
+                    },
+                    {
+                        id: 2,
+                        title: 'Kita Konbini Minimart (Kita コンビニ)',
+                        subtitle: 'Campus Minimart & Retail Web Management System',
+                        category: 'web',
+                        categoryLabel: 'Full-Stack Web',
+                        primaryTag: 'Laravel',
+                        status: 'Live Demo Available',
+                        tags: ['Laravel', 'MySQL', 'PHP', 'E-Commerce', 'Auth & Shelf Locator'],
+                        image: '../assets/kitakombini.png',
+                        liveUrl: 'https://d06375.schtg.com/kita-konbini-4/public/login',
+                        caseStudyPage: 'kitakombini-case-study.html',
+                        githubUrl: 'https://github.com/Aiman029/kitakombini',
+                        summary: 'Campus minimart web retail platform engineered with Laravel & MySQL. Features real-time store catalog, in-store product shelf locator, user wishlists, shopping cart, and administrative inventory controls.',
+                        overview: 'Developed as an end-to-end retail and campus minimart platform for university students. Enables quick item location discovery via an integrated shelf locator, cart and wishlist management, and back-end inventory control.',
+                        highlights: [
+                            'Devised in-store shelf locator enabling users to locate snacks, beverages, and stationery across store aisles.',
+                            'Engineered robust e-commerce flow with wishlist persistence, cart handling, and fast order checkout.',
+                            'Normalized relational MySQL database schema handling products, pricing, stock levels, and user transactions.',
+                            'Successfully deployed live build with secure session authentication and mobile-responsive UI.'
+                        ],
+                        stack: ['Laravel', 'PHP 8.x', 'MySQL', 'Blade', 'CSS3', 'LiteSpeed', 'Git']
+                    },
+                    {
+                        id: 4,
+                        title: 'Mudah Sejarah',
+                        subtitle: 'Interactive Malaysian History Learning Platform & Assessment Engine',
+                        category: 'web',
+                        categories: ['web', 'systems'],
+                        categoryLabel: 'Full-Stack Web & EdTech',
+                        primaryTag: 'PHP & MySQL',
+                        status: 'Academic Project • No Client',
+                        clientNote: 'Academic Project • Independent (No External Client)',
+                        tags: ['PHP', 'MySQL', 'JavaScript (ES6)', 'REST API', 'EdTech', 'Dual Access'],
+                        image: '../assets/mudahsejarah/landpage.png',
+                        caseStudyPage: 'mudahsejarah-case-study.html',
+                        summary: 'Interactive Malaysian history learning and quiz platform engineered with PHP, MySQL, and vanilla ES6 JavaScript. Features era-based learning modules, randomized 10-question timed quizzes, immediate answer evaluation recaps, and a multi-tiered competitive scoreboard.',
+                        overview: 'Developed as an independent academic software engineering project (no external client) to transform secondary school Malaysian history education into an engaging, gamified digital experience. The system adopts a decoupled 3-tier architecture with dual user roles (Guest vs. Authenticated Student), providing open exploration for guest learners while persisting student quiz attempts, average scores, and time-filtered leaderboard rankings through normalized MySQL backends.',
+                        highlights: [
+                            'Engineered 3-tier web architecture combining modular PHP RESTful API endpoints, MySQL persistence, and vanilla ES6 client without heavy frontend frameworks.',
+                            'Built dynamic Quiz Evaluation System featuring 50+ categorized questions, 10-question randomized test generator, countdown timer, and comprehensive answer review recaps.',
+                            'Designed normalized MySQL database schema handling user credentials, quiz attempts, historical records, and dynamic ranking filters (Today, Week, Month, All-Time).',
+                            'Implemented dual-access state model: barrier-free learning notes and practice quizzes for guest users, and secure BCrypt authenticated session tracking for registered students.',
+                            'Structured pedagogical study strategy and mnemonic tutorial modules aiding student retention of historical chronologies and examination answering techniques.'
+                        ],
+                        stack: ['PHP 8.x', 'MySQL', 'JavaScript (ES6)', 'HTML5 / CSS3', 'REST API', 'Canvas API', 'BCrypt'],
+                        academic: {
+                            course: 'DER3073: Software Engineering / Requirements Engineering',
+                            institution: 'Universiti Pendidikan Sultan Idris (UPSI)',
+                            supervisor: 'Independent Academic Project (No External Client)'
+                        },
+                        screensTitle: 'System Screens & Interactive Modules',
+                        screens: {
+                            overview: {
+                                tabLabel: 'Home & Topics',
+                                title: 'Platform Landing & Historical Topic Directory',
+                                image: '../assets/mudahsejarah/landpage.png',
+                                description: 'Heritage-themed landing interface presenting Malaysian history eras (Kesultanan Melayu Melaka, Zaman Penjajahan, Perjuangan Kemerdekaan, Malaysia Merdeka) with interactive particle animations and platform metrics.'
+                            },
+                            quiz: {
+                                tabLabel: 'Quiz Engine',
+                                title: 'Interactive Quiz Assessment Engine',
+                                image: '../assets/mudahsejarah/Quiz.png',
+                                description: 'Real-time quiz interface featuring countdown timer, randomized questions from the 50-item question bank, responsive answer selection cards, and instant progress counters.'
+                            },
+                            recap: {
+                                tabLabel: 'Answer Recap',
+                                title: 'Automated Scoring & Detailed Answer Review',
+                                image: '../assets/mudahsejarah/answerrecap.png',
+                                description: 'Post-quiz diagnostic review breaking down total score percentage, time elapsed, and correct vs. incorrect answers to strengthen student understanding.'
+                            },
+                            scoreboard: {
+                                tabLabel: 'Scoreboard',
+                                title: 'Competitive Leaderboard & Time-Filtered Rankings',
+                                image: '../assets/mudahsejarah/scoreboard.png',
+                                description: 'Dynamic scoreboard displaying student ranks, quiz scores, and completion timestamps with time-based filters (All-Time, Daily, Weekly, Monthly) to foster motivation.'
+                            },
+                            profile: {
+                                tabLabel: 'Student Profile',
+                                title: 'User Profile & Academic Performance Dashboard',
+                                image: '../assets/mudahsejarah/UserProfile.png',
+                                description: 'Authenticated student control panel tracking total quiz attempts, cumulative score average, personal best score, and complete chronological quiz submission logs.'
+                            }
+                        },
+                        architecture: {
+                            synopsis: 'Mudah Sejarah is engineered around a decoupled 3-tier web architecture designed for lightweight, high-speed delivery without bulky frontend dependencies. The presentation layer employs modular ES6 JavaScript and an optimized Canvas particle engine; the application layer uses stateless PHP RESTful API endpoints for authentication, scoring, and leaderboard queries; and the data layer utilizes a normalized MySQL relational schema enforcing student attempt histories and time-interval ranking constraints.',
+                            scope: 'Secondary School Malaysian History Syllabus (Form 1–5)',
+                            clientNote: 'Independent Academic Project (No External Client)',
+                            subsystems: [
+                                'Dual-Access Authentication Subsystem (Guest Access vs BCrypt Hashed Student Sessions)',
+                                'Era-Based Learning Material Subsystem (Structured Modules & Learning Objectives)',
+                                'Dynamic Quiz Engine Subsystem (10-Question Randomized Generator & Countdown Timer)',
+                                'Temporal Scoreboard Subsystem (SQL Date Interval Filters: Today, Week, Month, All-Time)',
+                                'Pedagogical Tutorial Subsystem (Exam Tactics & Mnemonic Memorization Frameworks)',
+                                'Student Analytics Subsystem (Cumulative Averages, Peak Scores & Submission Logs)'
+                            ]
+                        },
+                        team: [
+                            {
+                                name: 'Muhammad Aiman Hafiz Bin Rosli',
+                                matric: 'D20231106375',
+                                role: 'Quality Assurance & Technical Documentation Lead',
+                                contribution: 'Formulated test cases and performed functional verification across authentication, quiz calculation algorithms, and scoreboard data flow. Assisted with frontend UI components and authored the comprehensive Software Requirement Specification (SRS v1.0) including use case specifications and activity diagrams.'
+                            },
+                            {
+                                name: 'Muhammad Taufiq Hidayat Bin Johari',
+                                matric: 'D20231106352',
+                                role: 'Full-Stack Web Developer',
+                                contribution: 'Architected end-to-end full-stack web structure, developed modular PHP backend API endpoints (user authentication, quiz score persistence, time-filtered scoreboard ranking), and implemented asynchronous JavaScript fetch handlers.'
+                            },
+                            {
+                                name: 'Muhammad Haikal Daniel Bin Azhar',
+                                matric: 'D20231106338',
+                                role: 'UI/UX Designer & Frontend Developer',
+                                contribution: 'Designed Malaysian heritage-themed user interfaces, responsive layouts, interactive quiz cards, and dynamic canvas particle animations to elevate user engagement.'
+                            },
+                            {
+                                name: 'Afiq Zulfadhli Bin Mohd Zamzuri',
+                                matric: 'D20231106336',
+                                role: 'Curriculum & Assessment Content Specialist',
+                                contribution: 'Structured syllabus-aligned Malaysian history question banks (50+ questions), categorized learning topics by historical eras, and designed diagnostic assessment tiers targeting student comprehension gaps.'
+                            },
+                            {
+                                name: 'Nurulain Syafiqah Binti Abd Razak',
+                                matric: 'D20231106346',
+                                role: 'Lead Systems Analyst & Requirements Engineer',
+                                contribution: 'Authored system requirement specifications (SRS v1.0), mapped functional (FR001–FR005) and non-functional constraints, drafted system use case diagrams, and documented user interaction workflows.'
+                            }
+                        ]
+                    },
+                    {
+                        id: 5,
+                        title: 'Wedding Event Hall Booking System',
+                        subtitle: 'Database-Driven Reservation & Management Platform (Majlis Reserve)',
+                        category: 'web',
+                        categories: ['web', 'systems'],
+                        categoryLabel: 'Full-Stack Web & Database',
+                        primaryTag: 'PHP & MySQL',
+                        status: 'Live Demo Available',
+                        tags: ['PHP', 'MySQL / MariaDB', 'CRUD Engine', 'Dual-Role Portals', 'Academic'],
+                        image: '../assets/wedding/user/landpage.png',
+                        liveUrl: 'https://majlisreserve.infy.click/eventhall/index.php',
+                        liveLabel: 'Open Live Website',
+                        summary: 'Web-based event reservation platform engineered with PHP and MySQL (MariaDB). Replaces manual booking ambiguity with a centralized relational database, automated catering & pax cost calculations, double-booking prevention, and distinct User and Admin operational portals.',
+                        overview: 'Developed for DTD3033 (Database-Driven Web Programming) at UPSI to modernize wedding event hall reservation workflows. The system eliminates manual phone/WhatsApp scheduling risks through a normalized 4-table relational database (BOOKINGS, CATERING_SETS, HALLS, USERS). Includes a seamless customer reservation journey with real-time cost calculation and a secure administrator portal for schedule conflict prevention and booking status approvals.',
+                        highlights: [
+                            'Engineered normalized MariaDB schema (3NF) linking Bookings, Halls, Catering Sets, and Users with foreign key referential integrity.',
+                            'Developed Customer Portal featuring 5 themed halls (Aurora, Fairy, Secret Garden, Victoria, Twilight Saga) and tiered catering pricing (500 vs 1000 pax).',
+                            'Built automated conflict-detection logic ensuring no overlapping reservations are approved for the same event date and hall.',
+                            'Created secure Administrator Control Panel for real-time status management (Pending, Accepted, Rejected) and catering/hall package management.',
+                            'Integrated instantaneous booking summaries, client record tracking, and direct WhatsApp liaison communication.'
+                        ],
+                        stack: ['PHP 8.x', 'MySQL / MariaDB', 'Apache', 'Session Auth', 'Responsive CSS', 'Relational ERD'],
+                        academic: {
+                            course: 'DTD3033: Pengaturcaraan Web Berpandukan Pangkalan Data',
+                            institution: 'Universiti Pendidikan Sultan Idris (UPSI)',
+                            supervisor: 'Prof. Madya Dr. Aslina Binti Saad'
+                        },
+                        roles: {
+                            user: {
+                                title: 'Customer / User Portal',
+                                image: '../assets/wedding/user/landpage.png',
+                                description: 'Customer reservation experience: allows prospective couples to view 5 themed halls, compare Set A & Set B catering packages across 500 or 1000 pax, configure their event date, view instant price calculations, submit reservations, and contact the hall manager on WhatsApp.'
+                            },
+                            admin: {
+                                title: 'Administrator Control Portal',
+                                image: '../assets/wedding/admin/admindash.png',
+                                description: 'Operations management portal: requires authenticated administrator login, centralizes all incoming booking requests, enables one-click booking status updates (Pending → Accepted / Rejected), prevents double-booking conflicts, and manages hall and catering configurations.'
+                            }
+                        },
+                        team: [
+                            {
+                                name: 'Muhammad Aiman Hafiz Bin Rosli',
+                                matric: 'D20231106375',
+                                role: 'Project Lead & Full-Stack Developer',
+                                contribution: 'Engineered complete relational MySQL schema (3NF) with foreign keys, programmed core PHP backend booking logic, pricing calculation engines, session authentication, double-booking validation, admin dashboard, and live cloud deployment.'
+                            },
+                            {
+                                name: 'Aaron Raja A/L Jacob Paul',
+                                matric: 'D20231106504',
+                                role: 'Frontend UI & Client Experience',
+                                contribution: 'Assisted with client-facing portal page layout, catering package showcase cards, responsive form styling, and WhatsApp CTA integration.'
+                            },
+                            {
+                                name: 'Wan Mohammad Sirajuddin Bin Wan Badrul Hisham',
+                                matric: 'D20231106454',
+                                role: 'Systems Analyst & QA Testing',
+                                contribution: 'Assisted in business process mapping, use case diagrams, relational schema test validation, edge-case booking tests, and technical documentation.'
+                            }
+                        ]
+                    },
+                    {
+                        id: 6,
+                        title: 'TASUKU: Anime Quest Planner & To-Do App',
+                        subtitle: 'Gamified Task Management, Calendar & Analytics',
+                        category: 'mobile',
+                        categoryLabel: 'Mobile Application',
+                        primaryTag: 'Flutter & Hive',
+                        status: 'Open Source • Active Project',
+                        tags: ['Flutter', 'Dart', 'Hive NoSQL', 'Provider', 'Gamification', 'Table Calendar', 'FL Chart'],
+                        image: '../assets/tasuku/overall.png',
+                        githubUrl: 'https://github.com/Aiman029/Tasuku',
+                        caseStudyPage: 'tasuku-case-study.html',
+                        summary: 'A stylish, gamified productivity mobile client engineered with Flutter and Hive NoSQL. Transforms mundane task management into RPG quests with real-time EXP progression, nested subtask checklists, scheduled local notifications, custom calendar planning, and weekly completion trend analytics.',
+                        overview: 'TASUKU was conceived to eliminate task paralysis and productivity burnout by combining clean software architecture with gamified engagement. Built with a decoupled Provider state pattern, zero-latency Hive NoSQL local storage, exact timezone-aware notifications, and an anime-inspired visual interface complete with floating sakura petals.',
+                        architecture: {
+                            synopsis: 'TASUKU is built on a clean multi-layer Flutter architecture that decouples UI rendering from business logic using Provider (TaskProvider & CalendarProvider). Data persistence is executed through Hive NoSQL binary boxes with custom TypeAdapters for zero-latency startup and offline reliability, while local notifications are scheduled natively using flutter_local_notifications and the timezone library.',
+                            scope: 'Cross-Platform Mobile Task Management & Gamified Habit Tracking',
+                            clientNote: 'Personal Project & Open Source (GitHub: Aiman029/Tasuku)',
+                            subsystems: [
+                                'Gamified Quest & EXP Progression Subsystem (Calculates real-time player level and EXP progress upon task completion)',
+                                'Task & Nested Subtask Checklist Subsystem (Supports granular checklists with completion percentages, priority tiers, and category tags)',
+                                'Offline-First Hive NoSQL Storage Subsystem (Custom TypeAdapters with fast binary serialization and zero-latency retrieval)',
+                                'Local Push Notification Subsystem (Timezone-configured background reminder alerts for upcoming deadlines)',
+                                'Interactive Calendar Planning Subsystem (TableCalendar integration with event markers and date-filtered task views)',
+                                'Weekly Productivity Analytics Subsystem (FL Chart visualizations illustrating completion velocity and performance trends)'
+                            ]
+                        },
+                        screens: {
+                            home: {
+                                tabLabel: 'Quest Dashboard',
+                                title: 'Quest Dashboard & Real-Time EXP Level Progress',
+                                image: '../assets/tasuku/appshome.png',
+                                description: 'Main gamified task interface featuring user level indicators, EXP progress bar, time-aware anime greetings (Ohayou/Konnichiwa/Konbanwa), category filters, and task tiles with progress badges.'
+                            },
+                            add: {
+                                tabLabel: 'Add & Edit Quest',
+                                title: 'Task Configuration Sheet & Subtask Checklist',
+                                image: '../assets/tasuku/addlist.png',
+                                description: 'Comprehensive task creation modal allowing users to configure titles, descriptions, due dates, reminder times, priority tiers (High/Medium/Low), categories, and nested subtasks.'
+                            },
+                            calendar: {
+                                tabLabel: 'Calendar Planner',
+                                title: 'Interactive Table Calendar & Daily Task Filters',
+                                image: '../assets/tasuku/calendar.png',
+                                description: 'Visual calendar interface built with TableCalendar displaying active event markers on scheduled task dates, enabling seamless daily planning and timeline inspection.'
+                            },
+                            analytics: {
+                                tabLabel: 'Analytics & Trends',
+                                title: 'Weekly Productivity Analytics & FL Chart Visualizations',
+                                image: '../assets/tasuku/weeklyanalytics.png',
+                                description: 'Productivity statistics dashboard visualizing weekly task completion trends, productivity momentum, and finished vs pending ratios.'
+                            },
+                            overall: {
+                                tabLabel: 'Full Overview',
+                                title: 'Complete TASUKU Mobile Client Ecosystem',
+                                image: '../assets/tasuku/overall.png',
+                                description: 'High-level multi-screen showcase illustrating the cohesive visual aesthetic, anime-inspired styling, and comprehensive task management flows.'
+                            }
+                        },
+                        highlights: [
+                            'Engineered offline-first local persistence utilizing Hive NoSQL with custom TypeAdapters for zero-latency serialization.',
+                            'Designed RPG quest gamification calculating real-time EXP and level progression when tasks are completed.',
+                            'Built scheduled task alarms and daily reminders leveraging flutter_local_notifications and timezone configuration.',
+                            'Integrated interactive calendar scheduling with table_calendar and weekly completion trend analytics powered by fl_chart.',
+                            'Crafted dynamic anime-inspired aesthetics with floating sakura petal physics, time-aware greetings, and responsive themes.'
+                        ],
+                        stack: ['Flutter', 'Dart', 'Hive NoSQL', 'Provider', 'Table Calendar', 'Local Notifications', 'FL Chart', 'Material 3']
+                    }
+                ]
+            }
+        }
+    </script>
+</body>
+
+</html>

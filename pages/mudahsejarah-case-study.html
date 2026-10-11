@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en" x-data="mudahSejarahCaseStudyApp()" :class="{'dark': dark}" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study: Mudah Sejarah &bull; Muhammad Aiman Hafiz</title>
+    <meta name="description"
+        content="In-depth Software Engineering case study of Mudah Sejarah - an interactive Malaysian history learning platform and assessment engine developed with PHP, MySQL, and vanilla ES6 JavaScript." />
+
+    <!-- Favicon / Tab Icon (Face) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=2" />
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png?v=2" />
+    <link rel="shortcut icon" href="../assets/favicon.ico?v=2" />
+
+    <!-- Google Fonts: Montserrat (Headings) & DM Sans (Body) + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+        rel="stylesheet" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Montserrat', 'sans-serif'],
+                        body: ['DM Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        accent: '#FF6B2B',
+                        'accent-light': '#FF8F5C',
+                        'accent-dark': '#E55315'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="../css/style.css" />
+
+    <!-- Instant Dark Mode Init -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-body antialiased selection:bg-accent selection:text-white transition-colors duration-300 relative min-h-screen">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        :class="scrolled ? 'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5' : 'bg-transparent'">
+        <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+            <a href="../index.html" class="flex items-center gap-2 group">
+                <span class="font-display font-black text-xl text-zinc-900 dark:text-white group-hover:text-accent transition-colors">
+                    AH<span class="text-accent">.</span>
+                </span>
+                <span class="text-xs font-mono text-zinc-600 dark:text-zinc-400 hidden sm:inline-block border-l border-zinc-200 dark:border-zinc-800 pl-2">
+                    Case Study
+                </span>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="flex items-center gap-6">
+                <a href="../index.html" class="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors nav-link">
+                    Portfolio
+                </a>
+                <a href="projects.html" class="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors nav-link">
+                    Projects
+                </a>
+
+                <!-- Theme Toggle -->
+                <button @click="toggleTheme()" type="button" aria-label="Toggle visual theme"
+                    class="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors">
+                    <svg x-show="!dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg x-show="dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-24 pb-20">
+        <!-- ==================== BREADCRUMBS & HERO ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-12">
+            <!-- Breadcrumbs -->
+            <nav class="flex items-center gap-2 text-xs font-mono text-zinc-500 mb-6" aria-label="Breadcrumb">
+                <a href="../index.html" class="hover:text-accent transition-colors">Home</a>
+                <span>/</span>
+                <a href="projects.html" class="hover:text-accent transition-colors">Projects</a>
+                <span>/</span>
+                <span class="text-zinc-800 dark:text-zinc-300 font-semibold truncate">Mudah Sejarah Case Study</span>
+            </nav>
+
+            <!-- Hero Badges -->
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-orange-50 dark:bg-accent/15 text-accent border border-orange-200 dark:border-accent/30 font-medium">
+                    Software Engineering Project
+                </span>
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60 font-medium">
+                    Full-Stack Web &bull; EdTech Platform
+                </span>
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium">
+                    Client: None (Independent Academic Project)
+                </span>
+            </div>
+
+            <h1 class="font-display font-black text-3xl sm:text-4xl md:text-5xl text-zinc-900 dark:text-white tracking-tight mb-4 leading-tight">
+                Mudah Sejarah:<br class="hidden sm:inline" /> Interactive Learning &amp; Assessment Engine
+            </h1>
+            <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed mb-8">
+                A full-stack Malaysian history educational web application engineered with <span class="font-semibold text-zinc-900 dark:text-white">PHP 8.x, MySQL, and Vanilla ES6 JavaScript</span>. Developed as an independent academic software engineering project to modernize secondary school history education into an engaging, gamified digital experience featuring dynamic randomized quiz generation, automated scoring recaps, time-filtered leaderboards, and dual guest/student access tiers.
+            </p>
+
+            <!-- Hero Action Buttons & Quick Links -->
+            <div class="flex flex-wrap items-center gap-4 pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                <a href="projects.html"
+                    class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 hover:border-accent text-zinc-800 dark:text-zinc-200 font-medium text-sm px-6 py-3 rounded-full transition-colors bg-zinc-50 dark:bg-zinc-900">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Back to All Projects</span>
+                </a>
+
+                <a href="#showcase"
+                    class="btn-shimmer inline-flex items-center gap-2 bg-accent hover:bg-accent-light text-white font-medium text-sm px-6 py-3 rounded-full transition-all shadow-lg shadow-accent/20">
+                    <span>Explore Interface Showcase</span>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </a>
+
+                <a href="#architecture"
+                    class="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors sm:ml-auto">
+                    <span>System Architecture Synopsis &darr;</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ==================== KEY METRICS STRIP ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Curriculum Scope</div>
+                    <div class="text-2xl md:text-3xl font-black text-accent font-display">50+ Qs</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">5 Core Malaysian historical eras</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Quality Assurance</div>
+                    <div class="text-2xl md:text-3xl font-black text-emerald-500 font-display">100% Pass</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Verified auth, quiz &amp; scoreboard flows</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Architecture</div>
+                    <div class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white font-display">3-Tier</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Decoupled UI, REST API &amp; MySQL</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Software Stack</div>
+                    <div class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white font-display">PHP 8.x</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">MySQL + ES6 JS + Canvas API</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DUAL-TAB INTERACTIVE SHOWCASE ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="showcase">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white">
+                        System Interface &amp; Workflow Gallery
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400">
+                        Explore the complete user journey across interactive learning modules, timed quizzes, and student analytics.
+                    </p>
+                </div>
+
+                <!-- Showcase Category Tab Buttons -->
+                <div class="inline-flex p-1 bg-zinc-100 dark:bg-zinc-900 rounded-full border border-zinc-200 dark:border-zinc-800">
+                    <button type="button" @click="activeCategory = 'learning'; activeIndex = 0"
+                        :class="activeCategory === 'learning' ? 'bg-accent text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'"
+                        class="px-5 py-2 rounded-full text-xs font-medium transition-all">
+                        Learning &amp; Quiz Engine (5)
+                    </button>
+                    <button type="button" @click="activeCategory = 'analytics'; activeIndex = 0"
+                        :class="activeCategory === 'analytics' ? 'bg-accent text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'"
+                        class="px-5 py-2 rounded-full text-xs font-medium transition-all">
+                        Analytics &amp; Tutorials (5)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Showcase Display -->
+            <div class="rounded-3xl overflow-hidden border border-zinc-200/80 dark:border-zinc-800 bg-zinc-900 shadow-2xl mb-4 relative">
+                <div class="aspect-[16/10] sm:aspect-[16/9] w-full flex items-center justify-center bg-zinc-950 overflow-hidden">
+                    <img :src="currentList[activeIndex].src" :alt="currentList[activeIndex].title"
+                        class="w-full h-full object-contain transition-all duration-300" />
+                </div>
+                <div class="p-5 sm:p-6 bg-zinc-900/90 backdrop-blur-md border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-white">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-accent/20 text-accent font-semibold"
+                                x-text="(activeCategory === 'learning' ? 'Learning #' : 'Analytics #') + (activeIndex + 1) + ' of ' + currentList.length"></span>
+                            <h3 class="font-display font-bold text-lg" x-text="currentList[activeIndex].title"></h3>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-300 mt-1" x-text="currentList[activeIndex].description"></p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" @click="prevSlide()" aria-label="Previous screenshot"
+                            class="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button type="button" @click="nextSlide()" aria-label="Next screenshot"
+                            class="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thumbnail Selector Strip -->
+            <div class="grid grid-cols-5 gap-2 sm:gap-3">
+                <template x-for="(item, idx) in currentList" :key="idx">
+                    <button type="button" @click="activeIndex = idx"
+                        class="group relative rounded-xl overflow-hidden border-2 transition-all aspect-[16/10]"
+                        :class="activeIndex === idx ? 'border-accent ring-2 ring-accent/30' : 'border-zinc-200 dark:border-zinc-800 opacity-60 hover:opacity-100'">
+                        <img :src="item.src" :alt="item.title" class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors"></div>
+                        <span class="absolute bottom-1 right-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/70 text-white"
+                            x-text="idx + 1"></span>
+                    </button>
+                </template>
+            </div>
+        </section>
+
+        <!-- ==================== THE PROBLEM & DIGITALIZED SOLUTION ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="overview">
+            <div class="grid lg:grid-cols-2 gap-10 items-start">
+                <!-- Academic Problem Statement -->
+                <div class="p-8 rounded-3xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="w-10 h-10 rounded-xl bg-orange-500/10 text-accent flex items-center justify-center font-bold font-mono mb-4">
+                        01
+                    </div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-3">
+                        The Pedagogical Challenge
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                        Malaysian secondary school history (Sejarah) is frequently regarded by students aged 13–17 as one of the most challenging academic subjects due to traditional teaching limitations:
+                    </p>
+                    <ul class="space-y-3 text-xs text-zinc-700 dark:text-zinc-300">
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Passive Rote Memorization:</strong> Static textbooks and repetitive notes discourage critical inquiry, resulting in poor conceptual retention of historical timelines and events.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Delayed Formative Feedback:</strong> Traditional paper exercises fail to provide immediate diagnostic explanations when students select incorrect answers.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Absence of Gamified Motivation:</strong> Without healthy peer benchmarks, countdown pacing, or ranking leaderboards, students lack the enthusiasm needed for self-directed revision.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Lack of Mnemonic Study Strategies:</strong> Students rarely receive structured guidance on mnemonic techniques, exam answering strategies, or chronological chunking methods.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Digitalized Solution -->
+                <div class="p-8 rounded-3xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold font-mono mb-4">
+                        02
+                    </div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-3">
+                        The Digitalized Edutainment Solution
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                        Developed as an independent software engineering initiative (no external client), <strong>Mudah Sejarah</strong> unites curriculum-aligned content with modern web interactivity:
+                    </p>
+                    <div class="space-y-3 text-xs text-zinc-700 dark:text-zinc-300">
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Era-Based Interactive Learning Directory</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Structured modules covering Kesultanan Melayu Melaka, Penjajahan Portugis &amp; Belanda, Perjuangan Kemerdekaan, and Malaysia Merdeka with key learning objectives.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Dynamic 10-Question Randomized Quiz Engine</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Extracts 10 randomized questions from a 50-item question repository per session, pairing countdown timing with immediate answer verification.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">In-Depth Diagnostic Answer Recap</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Breaks down question results immediately upon completion, highlighting mistakes and providing corrective rationales to solidify understanding.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Multi-Interval Scoreboard &amp; Student Analytics</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Time-filtered leaderboard queries (Today, Week, Month, All-Time) paired with individual student profile analytics tracking attempts, averages, and best scores.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SYSTEM ARCHITECTURE & SYNOPSIS ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="architecture">
+            <div class="border-t border-zinc-100 dark:border-zinc-800 pt-16">
+                <span class="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Engineering Overview &bull; Synopsis</span>
+                <h2 class="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white mt-1 mb-4">
+                    Three-Tier Architecture &amp; System Synopsis
+                </h2>
+                <p class="text-sm text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed mb-10">
+                    The Mudah Sejarah system adopts a decoupled three-tier architectural model separating the browser presentation layer, PHP backend REST endpoints, and MySQL relational database. Designed without external client entanglements, the application enforces separation of concerns to provide low latency, high maintainability, and friction-free accessibility across desktop and mobile browsers.
+                </p>
+
+                <!-- Architecture 3-Tier Grid -->
+                <div class="grid md:grid-cols-3 gap-6 mb-10">
+                    <!-- Layer 1 -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-accent text-xs font-mono font-semibold mb-2">[Presentation Layer]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Client UI (Vanilla HTML5 &amp; ES6)
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Engineered using modular ES6 JavaScript controllers (<code class="text-accent font-mono text-[11px]">quiz.js</code>, <code class="text-accent font-mono text-[11px]">scoreboard.js</code>, <code class="text-accent font-mono text-[11px]">auth.js</code>), semantic HTML5, and responsive CSS. Features an interactive Malaysian heritage particle canvas that runs at 60fps without heavy client-side libraries.
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            Zero Bloat &bull; Asynchronous Fetch API &bull; 60fps Canvas
+                        </div>
+                    </div>
+
+                    <!-- Layer 2 -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-emerald-500 text-xs font-mono font-semibold mb-2">[Application &amp; Logic Layer]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                RESTful Web Services (PHP 8.x)
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Stateless PHP API endpoints handling BCrypt password verification, session authentication, incoming quiz submission processing, dynamic score persistence, and interval-filtered leaderboard ranking queries with structured JSON responses.
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            JSON REST APIs &bull; BCrypt Hashing &bull; CORS Headers
+                        </div>
+                    </div>
+
+                    <!-- Layer 3 -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-blue-500 text-xs font-mono font-semibold mb-2">[Persistence Layer]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Relational Data Layer (MySQL)
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Centralized MySQL database with <code class="text-accent font-mono text-[11px]">utf8mb4</code> character encoding. Employs relational primary/foreign key integrity connecting student credentials (<code class="text-accent font-mono text-[11px]">users</code>) with cumulative quiz submissions (<code class="text-accent font-mono text-[11px]">quiz_scores</code>).
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            Normalized Tables &bull; Index Optimization &bull; Temporal Queries
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Architectural Subsystems Breakdown -->
+                <div class="mb-10">
+                    <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-4">
+                        Core System Subsystems
+                    </h3>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 01</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Dual-Tier Authentication</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Allows guest users to explore educational notes and practice quizzes with zero friction, while authenticated students enjoy persistent score recording and personalized historical dashboards.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 02</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Era Learning Material</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Categorized historical content directory organized across 4 major eras. Includes explicit learning objectives and automatic prompts directing students to the chapter quiz upon topic completion.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 03</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Randomized Quiz Generator</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Client-side algorithm that pulls 10 randomized questions from a 50-item question repository. Coordinates countdown timing, answer selection state, and immediate result grading.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 04</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Time-Filtered Scoreboard</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Server-side SQL query filtering by date intervals (Today via <code class="text-accent font-mono text-[10px]">CURDATE()</code>, Week via 7-day intervals, Month via 30-day intervals, and All-Time) to foster ongoing peer motivation.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 05</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Tutorial &amp; Mnemonic Engine</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Educational strategy center providing actionable study tips (Cara Pembelajaran), examination technique guidance (Tips Peperiksaan), and memory association frameworks (Teknik Hafalan).
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 06</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Student Profile &amp; Stats</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Aggregated student metrics calculating total quizzes taken, cumulative average score, and personal best score, paired with a chronological review log of past attempts.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Endpoint Contract Table -->
+                <div class="overflow-x-auto rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 mb-10">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-zinc-100 dark:bg-zinc-800/70 border-b border-zinc-200 dark:border-zinc-800 font-mono text-zinc-500">
+                            <tr>
+                                <th class="p-4">Endpoint</th>
+                                <th class="p-4">Method</th>
+                                <th class="p-4">Payload / Parameters</th>
+                                <th class="p-4">Architectural Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200/60 dark:divide-zinc-800 font-mono text-zinc-700 dark:text-zinc-300">
+                            <tr>
+                                <td class="p-4 font-bold text-accent">/api/login.php</td>
+                                <td class="p-4 font-semibold text-emerald-600 dark:text-emerald-400">POST</td>
+                                <td class="p-4">{ email, password }</td>
+                                <td class="p-4 font-sans">Validates user, verifies BCrypt password hash, and returns profile stats with past quiz history.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-accent">/api/register.php</td>
+                                <td class="p-4 font-semibold text-emerald-600 dark:text-emerald-400">POST</td>
+                                <td class="p-4">{ username, email, password }</td>
+                                <td class="p-4 font-sans">Enforces unique email/username constraints, hashes password via BCrypt, and initializes student account.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-accent">/api/save_score.php</td>
+                                <td class="p-4 font-semibold text-emerald-600 dark:text-emerald-400">POST</td>
+                                <td class="p-4">{ user_id, score, total_questions, time_taken }</td>
+                                <td class="p-4 font-sans">Persists completed quiz attempts to <code class="text-accent font-mono text-[11px]">quiz_scores</code> table with foreign key linkage to student profile.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-accent">/api/get_scoreboard.php</td>
+                                <td class="p-4 font-semibold text-blue-600 dark:text-blue-400">GET</td>
+                                <td class="p-4">?filter=all|today|week|month&amp;limit=20</td>
+                                <td class="p-4 font-sans">Executes dynamic temporal SQL filtering to return ranked leaderboards ordered by score DESC, timestamp ASC.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-accent">/api/get_user_profile.php</td>
+                                <td class="p-4 font-semibold text-blue-600 dark:text-blue-400">GET</td>
+                                <td class="p-4">?user_id={id}</td>
+                                <td class="p-4 font-sans">Aggregates student performance metrics (COUNT, AVG, MAX) and full chronological attempt history.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Code Architecture Visual Block -->
+                <div class="p-6 sm:p-7 rounded-2xl bg-zinc-900 text-zinc-100 font-mono text-xs border border-zinc-800 shadow-xl overflow-x-auto">
+                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-zinc-800 text-zinc-400">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
+                            <span class="text-xs ml-2 text-zinc-300 font-bold">api/get_scoreboard.php (Temporal SQL Ranking)</span>
+                        </span>
+                        <span class="text-[11px] text-zinc-500">PHP 8.x &bull; MySQL Interval Aggregation</span>
+                    </div>
+                    <pre class="leading-relaxed"><span class="text-zinc-500">// Dynamic Temporal Leaderboard Query with SQL Interval Constraints</span>
+<span class="text-blue-400">$filter</span> = <span class="text-emerald-400">isset</span>(<span class="text-blue-400">$_GET</span>[<span class="text-amber-300">'filter'</span>]) ? <span class="text-blue-400">$_GET</span>[<span class="text-amber-300">'filter'</span>] : <span class="text-amber-300">'all'</span>;
+<span class="text-blue-400">$limit</span>  = <span class="text-emerald-400">isset</span>(<span class="text-blue-400">$_GET</span>[<span class="text-amber-300">'limit'</span>])  ? (<span class="text-emerald-400">int</span>)<span class="text-blue-400">$_GET</span>[<span class="text-amber-300">'limit'</span>] : <span class="text-purple-400">20</span>;
+
+<span class="text-blue-400">$sql</span> = <span class="text-amber-300">"SELECT u.id, u.username, u.email, qs.score, qs.created_at
+        FROM quiz_scores qs
+        JOIN users u ON qs.user_id = u.id"</span>;
+
+<span class="text-purple-400">switch</span> (<span class="text-blue-400">$filter</span>) {
+    <span class="text-purple-400">case</span> <span class="text-amber-300">'today'</span>:
+        <span class="text-blue-400">$sql</span> .= <span class="text-amber-300">" WHERE DATE(qs.created_at) = CURDATE()"</span>;
+        <span class="text-purple-400">break</span>;
+    <span class="text-purple-400">case</span> <span class="text-amber-300">'week'</span>:
+        <span class="text-blue-400">$sql</span> .= <span class="text-amber-300">" WHERE qs.created_at &gt;= DATE_SUB(NOW(), INTERVAL 7 DAY)"</span>;
+        <span class="text-purple-400">break</span>;
+    <span class="text-purple-400">case</span> <span class="text-amber-300">'month'</span>:
+        <span class="text-blue-400">$sql</span> .= <span class="text-amber-300">" WHERE qs.created_at &gt;= DATE_SUB(NOW(), INTERVAL 30 DAY)"</span>;
+        <span class="text-purple-400">break</span>;
+}
+
+<span class="text-blue-400">$sql</span> .= <span class="text-amber-300">" ORDER BY qs.score DESC, qs.created_at ASC LIMIT $limit"</span>;
+<span class="text-blue-400">$result</span> = <span class="text-blue-400">$conn</span>-&gt;<span class="text-emerald-400">query</span>(<span class="text-blue-400">$sql</span>);</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TEAM COLLABORATION & PROFESSIONAL ROLES ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="team">
+            <div class="border-t border-zinc-100 dark:border-zinc-800 pt-16">
+                <span class="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Engineering Division</span>
+                <h2 class="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white mt-1 mb-3">
+                    Team Collaboration &amp; Role Specialization
+                </h2>
+                <p class="text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed mb-8">
+                    Developed collaboratively by a 5-member student engineering team at Universiti Pendidikan Sultan Idris (UPSI) as an independent academic software engineering project without external client involvement.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Member 1: Muhammad Aiman Hafiz (User) -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-accent/30 dark:border-accent/30 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-bl-full pointer-events-none"></div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <div>
+                                <h3 class="font-bold text-zinc-900 dark:text-white text-base">Muhammad Aiman Hafiz Bin Rosli</h3>
+                                <span class="text-xs font-mono text-zinc-500">Matric: D20231106375</span>
+                            </div>
+                            <span class="text-xs font-mono px-3 py-1 rounded-full bg-accent/15 text-accent font-semibold">
+                                QA &amp; Systems Documentation Lead
+                            </span>
+                        </div>
+                        <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mt-2">
+                            Formulated test scenarios and performed rigorous functional validation across authentication, randomized quiz score calculations, and scoreboard temporal queries. Contributed to frontend UI layout components and authored the comprehensive Software Requirement Specification (SRS v1.0) use case narratives and activity diagrams.
+                        </p>
+                    </div>
+
+                    <!-- Member 2: Muhammad Taufiq Hidayat -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <div>
+                                <h3 class="font-bold text-zinc-900 dark:text-white text-base">Muhammad Taufiq Hidayat Bin Johari</h3>
+                                <span class="text-xs font-mono text-zinc-500">Matric: D20231106352</span>
+                            </div>
+                            <span class="text-xs font-mono px-3 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300 font-semibold">
+                                Full-Stack Web Developer
+                            </span>
+                        </div>
+                        <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mt-2">
+                            Architected end-to-end full-stack web structure, developed modular PHP backend API endpoints (user authentication, quiz score persistence, time-filtered scoreboard ranking), and implemented asynchronous JavaScript fetch handlers.
+                        </p>
+                    </div>
+
+                    <!-- Member 3: Muhammad Haikal Daniel -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <div>
+                                <h3 class="font-bold text-zinc-900 dark:text-white text-base">Muhammad Haikal Daniel Bin Azhar</h3>
+                                <span class="text-xs font-mono text-zinc-500">Matric: D20231106338</span>
+                            </div>
+                            <span class="text-xs font-mono px-3 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300 font-semibold">
+                                UI/UX &amp; Frontend Interface Designer
+                            </span>
+                        </div>
+                        <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mt-2">
+                            Designed Malaysian heritage-themed user interfaces, responsive layouts, interactive quiz cards, and dynamic canvas particle animations to elevate user engagement.
+                        </p>
+                    </div>
+
+                    <!-- Member 4: Afiq Zulfadhli -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <div>
+                                <h3 class="font-bold text-zinc-900 dark:text-white text-base">Afiq Zulfadhli Bin Mohd Zamzuri</h3>
+                                <span class="text-xs font-mono text-zinc-500">Matric: D20231106336</span>
+                            </div>
+                            <span class="text-xs font-mono px-3 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300 font-semibold">
+                                Curriculum &amp; Assessment Specialist
+                            </span>
+                        </div>
+                        <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mt-2">
+                            Structured syllabus-aligned Malaysian history question banks (50+ questions), categorized learning topics by historical eras, and designed diagnostic assessment tiers targeting student comprehension gaps.
+                        </p>
+                    </div>
+
+                    <!-- Member 5: Nurulain Syafiqah -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 md:col-span-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <div>
+                                <h3 class="font-bold text-zinc-900 dark:text-white text-base">Nurulain Syafiqah Binti Abd Razak</h3>
+                                <span class="text-xs font-mono text-zinc-500">Matric: D20231106346</span>
+                            </div>
+                            <span class="text-xs font-mono px-3 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300 font-semibold">
+                                Lead Systems Analyst &amp; Requirements Engineer
+                            </span>
+                        </div>
+                        <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mt-2">
+                            Authored system requirement specifications (SRS v1.0), mapped functional (FR001–FR005) and non-functional constraints, drafted system use case diagrams, and documented user interaction workflows.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== CALL TO ACTION ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-12">
+            <div class="p-8 sm:p-10 rounded-3xl bg-zinc-900 text-white border border-zinc-800 relative overflow-hidden text-center space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-accent/20 text-accent flex items-center justify-center mx-auto mb-2">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <h2 class="font-display font-black text-2xl sm:text-3xl text-white">
+                    Need a Technical Walkthrough of Mudah Sejarah?
+                </h2>
+                <p class="text-sm text-zinc-300 max-w-xl mx-auto leading-relaxed">
+                    Source code architecture, database schemas, and assessment evaluation flows can be demonstrated in detail during technical internship interviews.
+                </p>
+                <div class="pt-3 flex flex-wrap justify-center items-center gap-3">
+                    <button type="button" @click="copyEmail()"
+                        class="btn-shimmer inline-flex items-center gap-2 bg-accent hover:bg-accent-light text-white font-medium text-sm px-7 py-3 rounded-full transition-colors shadow-lg shadow-accent/20 cursor-pointer"
+                        title="Copy m.aimanhafiz27@gmail.com to clipboard">
+                        <svg x-show="!emailCopied" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <svg x-show="emailCopied" x-cloak class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span x-text="emailCopied ? 'Copied to Clipboard!' : 'Copy Email Address'">Copy Email Address</span>
+                    </button>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=m.aimanhafiz27@gmail.com&su=Technical%20Walkthrough%20Request:%20Mudah%20Sejarah"
+                        target="_blank" rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 border border-zinc-700 hover:border-accent text-zinc-200 hover:text-accent font-medium text-sm px-6 py-3 rounded-full transition-colors bg-zinc-800/80">
+                        <svg class="w-4 h-4 text-[#EA4335]" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                        </svg>
+                        <span>Open in Gmail &nearr;</span>
+                    </a>
+                    <a href="projects.html"
+                        class="inline-flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 text-zinc-200 font-medium text-sm px-6 py-3 rounded-full transition-colors bg-zinc-800/80">
+                        <span>&larr; Back to All Projects</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="border-t border-zinc-200/80 dark:border-zinc-900 py-10 text-xs text-zinc-500 dark:text-zinc-400">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                &copy; 2026 Muhammad Aiman Hafiz Bin Rosli &bull; Bachelor of Software Engineering (Hons), UPSI
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="../index.html" class="hover:text-accent transition-colors">Home</a>
+                <a href="projects.html" class="hover:text-accent transition-colors">Projects</a>
+                <a href="https://github.com/Aiman029" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Alpine App State -->
+    <script>
+        function mudahSejarahCaseStudyApp() {
+            return {
+                dark: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+                scrolled: false,
+                activeCategory: 'learning',
+                activeIndex: 0,
+                emailCopied: false,
+
+                learningScreenshots: [
+                    {
+                        src: '../assets/mudahsejarah/landpage.png',
+                        title: 'Platform Homepage & Historical Era Hub',
+                        description: 'Malaysian heritage-themed portal featuring 60fps canvas particle effects, quick topic navigation, and platform learning statistics.'
+                    },
+                    {
+                        src: '../assets/mudahsejarah/Topics.png',
+                        title: 'Curriculum-Aligned Learning Topics Directory',
+                        description: 'Era-based module catalog breaking history down into Kesultanan Melayu Melaka, Penjajahan Portugis & Belanda, and Independence milestones.'
+                    },
+                    {
+                        src: '../assets/mudahsejarah/landingQuiz.png',
+                        title: 'Quiz Assessment Rules & Configuration Portal',
+                        description: 'Pre-assessment briefing screen detailing test rules, question counts, and scoring mechanics before students begin.'
+                    },
+                    {
+                        src: '../assets/mudahsejarah/Quiz.png',
+                        title: 'Live Timed Quiz Gameplay Interface',
+                        description: 'Responsive multiple-choice quiz engine featuring dynamic countdown timer, question progression indicators, and instant option selection.'
+                    },
+                    {
+                        src: '../assets/mudahsejarah/SummaryQuiz.png',
+                        title: 'Immediate Quiz Performance Summary & Grade',
+                        description: 'Instant assessment feedback screen calculating overall percentage, accuracy score, and time elapsed upon test submission.'
+                    }
+                ],
+
+                analyticsScreenshots: [
+                    {
+                        src: '../assets/mudahsejarah/answerrecap.png',
+                        title: 'Diagnostic Answer Review & Remedial Breakdown',
+                        description: 'Detailed post-test audit screen contrasting student selections with correct answers to resolve misconceptions and reinforce knowledge.'
+                    },
+                    {
+                        src: '../assets/mudahsejarah/scoreboard.png',
+                        title: 'Competitive Scoreboard & Time-Filtered Rankings',
+                        description: 'Dynamic leaderboard ranking top student scores with real-time SQL temporal filters (Today, Weekly, Monthly, and All-Time).'
+                    },
+                    {
+                        src: '../assets/mudahsejarah/UserProfile.png',
+                        title: 'Student Profile & Performance Dashboard',
+                        description: 'Authenticated student control panel tracking total quiz attempts, cumulative score average, personal best, and attempt histories.'
+                    },
+                    {
+                        src: '../assets/mudahsejarah/TipsAnswering.png',
+                        title: 'Tutorial: Examination Answering Strategies',
+                        description: 'Curated pedagogical tutorial guiding secondary school students through structured exam answering techniques and question analysis.'
+                    },
+                    {
+                        src: '../assets/mudahsejarah/TipsAnswering2.png',
+                        title: 'Tutorial: Historical Mnemonic & Memorization Methods',
+                        description: 'Cognitive memory aids and mnemonic frameworks helping students effortlessly remember complex historical chronologies and key figures.'
+                    }
+                ],
+
+                get currentList() {
+                    return this.activeCategory === 'learning' ? this.learningScreenshots : this.analyticsScreenshots;
+                },
+
+                toggleTheme() {
+                    this.dark = !this.dark;
+                    localStorage.setItem('theme', this.dark ? 'dark' : 'light');
+                    if (this.dark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                },
+
+                nextSlide() {
+                    this.activeIndex = (this.activeIndex + 1) % this.currentList.length;
+                },
+
+                prevSlide() {
+                    this.activeIndex = (this.activeIndex - 1 + this.currentList.length) % this.currentList.length;
+                },
+
+                copyEmail() {
+                    const email = 'm.aimanhafiz27@gmail.com';
+                    if (navigator.clipboard && window.isSecureContext) {
+                        navigator.clipboard.writeText(email).then(() => {
+                            this.emailCopied = true;
+                            setTimeout(() => { this.emailCopied = false; }, 2500);
+                        }).catch(() => this.fallbackCopy(email));
+                    } else {
+                        this.fallbackCopy(email);
+                    }
+                },
+
+                fallbackCopy(text) {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-999999px';
+                    textArea.style.top = '-999999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        this.emailCopied = true;
+                        setTimeout(() => { this.emailCopied = false; }, 2500);
+                    } catch (err) {
+                        console.error('Copy fallback failed', err);
+                    }
+                    document.body.removeChild(textArea);
+                },
+
+                init() {
+                    window.addEventListener('scroll', () => {
+                        this.scrolled = window.scrollY > 20;
+                    }, { passive: true });
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

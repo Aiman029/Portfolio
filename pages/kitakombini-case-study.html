@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en" x-data="konbiniCaseStudyApp()" :class="{'dark': dark}" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study: Kita Konbini Minimart Management System &bull; Muhammad Aiman Hafiz</title>
+    <meta name="description"
+        content="In-depth Software Engineering case study of the Kita Konbini Minimart Management System developed with Laravel & MySQL. Features customer e-commerce, in-store product shelf locator, and administrative backoffice." />
+
+    <!-- Favicon / Tab Icon (Face) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=2" />
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png?v=2" />
+    <link rel="shortcut icon" href="../assets/favicon.ico?v=2" />
+
+    <!-- Google Fonts: Montserrat (Headings) & DM Sans (Body) + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+        rel="stylesheet" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Montserrat', 'sans-serif'],
+                        body: ['DM Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        accent: '#FF6B2B',
+                        'accent-light': '#FF8F5C',
+                        'accent-dark': '#E55315'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="../css/style.css" />
+
+    <!-- Instant Dark Mode Init -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-body antialiased selection:bg-accent selection:text-white transition-colors duration-300 relative min-h-screen">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        :class="scrolled ? 'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5' : 'bg-transparent'">
+        <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+            <a href="../index.html" class="flex items-center gap-2 group">
+                <span class="font-display font-black text-xl text-zinc-900 dark:text-white group-hover:text-accent transition-colors">
+                    AH<span class="text-accent">.</span>
+                </span>
+                <span class="text-xs font-mono text-zinc-600 dark:text-zinc-400 hidden sm:inline-block border-l border-zinc-200 dark:border-zinc-800 pl-2">
+                    Case Study
+                </span>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="flex items-center gap-6">
+                <a href="../index.html" class="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors nav-link">
+                    Portfolio
+                </a>
+                <a href="projects.html" class="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors nav-link">
+                    Projects
+                </a>
+                <a href="https://d06375.schtg.com/kita-konbini-4/public/login" target="_blank" rel="noopener noreferrer"
+                    class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
+                    <span>Live Production</span>
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+
+                <!-- Theme Toggle -->
+                <button @click="toggleTheme()" type="button" aria-label="Toggle visual theme"
+                    class="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors">
+                    <svg x-show="!dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg x-show="dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-24 pb-20">
+        <!-- ==================== BREADCRUMBS & HERO ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-12">
+            <!-- Breadcrumbs -->
+            <nav class="flex items-center gap-2 text-xs font-mono text-zinc-500 mb-6" aria-label="Breadcrumb">
+                <a href="../index.html" class="hover:text-accent transition-colors">Home</a>
+                <span>/</span>
+                <a href="projects.html" class="hover:text-accent transition-colors">Projects</a>
+                <span>/</span>
+                <span class="text-zinc-800 dark:text-zinc-300 font-semibold truncate">Kita Konbini Minimart System</span>
+            </nav>
+
+            <!-- Hero Badges -->
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-orange-50 dark:bg-accent/15 text-accent border border-orange-200 dark:border-accent/30 font-medium">
+                    DES3073 Software Engineering Project
+                </span>
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 font-medium">
+                    Live Production &bull; Deployed on LiteSpeed
+                </span>
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
+                    Client: Encik Syukri (UPSI)
+                </span>
+            </div>
+
+            <h1 class="font-display font-black text-3xl sm:text-4xl md:text-5xl text-zinc-900 dark:text-white tracking-tight mb-4 leading-tight">
+                Kita Konbini Minimart<br class="hidden sm:inline" /> Management System
+            </h1>
+            <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed mb-8">
+                A full-featured web retail and campus minimart management platform engineered with <span class="font-semibold text-zinc-900 dark:text-white">Laravel &amp; MySQL</span>. Solved real operational bottlenecks for a campus retail store at Universiti Pendidikan Sultan Idris (UPSI) by replacing manual ledger books with real-time digital inventory, an in-store product shelf locator, shopping cart checkout, and an executive backoffice.
+            </p>
+
+            <!-- Hero Action Buttons & Quick Links -->
+            <div class="flex flex-wrap items-center gap-4 pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                <a href="https://d06375.schtg.com/kita-konbini-4/public/login" target="_blank" rel="noopener noreferrer"
+                    class="btn-shimmer inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm px-6 py-3 rounded-full transition-all shadow-lg shadow-emerald-600/20">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    <span>Open Live Production System</span>
+                </a>
+
+                <a href="https://github.com/Aiman029/kitakombini" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 hover:border-accent text-zinc-800 dark:text-zinc-200 font-medium text-sm px-6 py-3 rounded-full transition-colors bg-zinc-50 dark:bg-zinc-900">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    <span>View GitHub Repository</span>
+                </a>
+
+                <a href="#architecture"
+                    class="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors ml-auto">
+                    <span>System Architecture &darr;</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ==================== KEY METRICS STRIP ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Functional Scope</div>
+                    <div class="text-2xl md:text-3xl font-black text-accent font-display">20 FRs</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Full IEEE SRS compliance</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Quality Assurance</div>
+                    <div class="text-2xl md:text-3xl font-black text-emerald-500 font-display">100% Pass</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">24 of 24 test cases verified</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Concurrency</div>
+                    <div class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white font-display">200+</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Concurrent user sessions (CR003)</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Software Stack</div>
+                    <div class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white font-display">Laravel 10</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">PHP 8.x + MySQL + Blade</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DUAL-ROLE INTERACTIVE SHOWCASE ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="showcase">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white">
+                        Dual-Portal Interface &amp; Workflow Gallery
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400">
+                        Explore the dedicated experiences built for both campus customers and minimart administrators.
+                    </p>
+                </div>
+
+                <!-- Role Tab Buttons -->
+                <div class="inline-flex p-1 bg-zinc-100 dark:bg-zinc-900 rounded-full border border-zinc-200 dark:border-zinc-800">
+                    <button type="button" @click="activeRole = 'user'; activeIndex = 0"
+                        :class="activeRole === 'user' ? 'bg-accent text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'"
+                        class="px-5 py-2 rounded-full text-xs font-medium transition-all">
+                        Customer Portal (8)
+                    </button>
+                    <button type="button" @click="activeRole = 'admin'; activeIndex = 0"
+                        :class="activeRole === 'admin' ? 'bg-accent text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'"
+                        class="px-5 py-2 rounded-full text-xs font-medium transition-all">
+                        Admin Backoffice (7)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Showcase Display -->
+            <div class="rounded-3xl overflow-hidden border border-zinc-200/80 dark:border-zinc-800 bg-zinc-900 shadow-2xl mb-4 relative">
+                <div class="aspect-[16/10] sm:aspect-[16/9] w-full flex items-center justify-center bg-zinc-950 overflow-hidden">
+                    <img :src="currentList[activeIndex].src" :alt="currentList[activeIndex].title"
+                        class="w-full h-full object-contain transition-all duration-300" />
+                </div>
+                <div class="p-5 sm:p-6 bg-zinc-900/90 backdrop-blur-md border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-white">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-accent/20 text-accent font-semibold"
+                                x-text="(activeRole === 'user' ? 'Customer #' : 'Admin #') + (activeIndex + 1) + ' of ' + currentList.length"></span>
+                            <h3 class="font-display font-bold text-lg" x-text="currentList[activeIndex].title"></h3>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-300 mt-1" x-text="currentList[activeIndex].description"></p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" @click="prevSlide()" aria-label="Previous screenshot"
+                            class="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button type="button" @click="nextSlide()" aria-label="Next screenshot"
+                            class="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thumbnail Selector Strip -->
+            <div class="grid grid-cols-4 sm:grid-cols-7 lg:grid-cols-8 gap-2 sm:gap-3">
+                <template x-for="(item, idx) in currentList" :key="idx">
+                    <button type="button" @click="activeIndex = idx"
+                        class="group relative rounded-xl overflow-hidden border-2 transition-all aspect-[16/10]"
+                        :class="activeIndex === idx ? 'border-accent ring-2 ring-accent/30' : 'border-zinc-200 dark:border-zinc-800 opacity-60 hover:opacity-100'">
+                        <img :src="item.src" :alt="item.title" class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors"></div>
+                        <span class="absolute bottom-1 right-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/70 text-white"
+                            x-text="idx + 1"></span>
+                    </button>
+                </template>
+            </div>
+        </section>
+
+        <!-- ==================== THE PROBLEM & CLIENT OBJECTIVES ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20">
+            <div class="grid lg:grid-cols-2 gap-10 items-start">
+                <!-- Client Pain Points -->
+                <div class="p-8 rounded-3xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="w-10 h-10 rounded-xl bg-orange-500/10 text-accent flex items-center justify-center font-bold font-mono mb-4">
+                        01
+                    </div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-3">
+                        The Client's Operational Bottlenecks
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                        During our initial observation and stakeholder interview with <strong>Encik Syukri</strong> (owner of Kita Konbini Minimart at UPSI), we identified critical manual bottlenecks that degraded student shopping efficiency and inventory control:
+                    </p>
+                    <ul class="space-y-3 text-xs text-zinc-700 dark:text-zinc-300">
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Manual Stock Ledger Errors:</strong> Physical stock counts relied on handwritten tally sheets, causing severe count discrepancies and untracked shrinkages.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>In-Store Shelf Location Friction:</strong> Students spent excessive time roaming aisles searching for specific imported snacks, instant noodles, or stationery items.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Peak Hour Counter Congestion:</strong> Long checkout queues formed between lectures due to manual cash collection and paper receipts.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Zero Real-Time Sales Intelligence:</strong> Store management had no automated reporting to identify fast-moving products or predict reorder dates.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Digitalized Solution -->
+                <div class="p-8 rounded-3xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold font-mono mb-4">
+                        02
+                    </div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-3">
+                        The Digitalized Web Solution
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                        We designed a centralized, database-backed web management platform fulfilling all 20 IEEE-standardized Software Requirements Specifications (SRS):
+                    </p>
+                    <div class="space-y-3 text-xs text-zinc-700 dark:text-zinc-300">
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">In-Store Product Shelf Locator</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Integrated shelf location tags (e.g. "Aisle 3 &bull; Shelf B") on every product card, allowing students to instantly locate items physically in the store.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Automated Stock &amp; Low-Stock Alerts (FR006)</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Real-time inventory decrementing with non-negative constraints (CR008) and automated alerts notifying staff when stock reaches critical thresholds.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Digital Checkout &amp; Receipts (FR017/FR018)</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Streamlined cart checkout with unique immutable receipt numbers (CR013), eliminating paper waste and speeding up transactions.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Executive Revenue Analytics (FR019/FR020)</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Real-time dashboards aggregating total revenue, daily gross volume, and top-selling product categories for data-driven restock decisions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SYSTEM ARCHITECTURE & DATABASE ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="architecture">
+            <div class="border-t border-zinc-100 dark:border-zinc-800 pt-16">
+                <span class="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Software Design Description (SDD)</span>
+                <h2 class="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white mt-1 mb-4">
+                    Three-Tier Architecture &amp; Database Design
+                </h2>
+                <p class="text-sm text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed mb-10">
+                    The Kita Konbini Minimart Management System strictly adheres to a modular three-tier architecture (User Layer, Application Layer, Data Layer) to guarantee separation of concerns, high maintainability, and data consistency under concurrent traffic.
+                </p>
+
+                <!-- Architecture 3-Tier Grid -->
+                <div class="grid md:grid-cols-3 gap-6 mb-10">
+                    <!-- Layer 1 -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-accent text-xs font-mono font-semibold mb-2">[Presentation Layer]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                User Layer (Blade &amp; CSS/JS)
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Responsive browser client offering tailored view hierarchies for Customers (catalog browsing, wishlists, cart checkout) and Administrators (inventory controls, price editing, sales reporting).
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            Mobile-optimized Blade templates &bull; Tailwind styling
+                        </div>
+                    </div>
+
+                    <!-- Layer 2 -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-emerald-500 text-xs font-mono font-semibold mb-2">[Business Logic Layer]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Application Layer (Laravel 10)
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Modular controllers managing Account Management, Product Inventory, Payment Processing, Notification Triggers, and Sales Analytics. Enforces authentication middleware and transaction boundaries.
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            Eloquent ORM &bull; Middleware Auth &bull; Service Interfaces
+                        </div>
+                    </div>
+
+                    <!-- Layer 3 -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-blue-500 text-xs font-mono font-semibold mb-2">[Persistence Layer]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Data Layer (MySQL DBMS)
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Centralized relational schema organized into 7 core tables: <code class="text-accent font-mono text-[11px]">User</code>, <code class="text-accent font-mono text-[11px]">Product</code>, <code class="text-accent font-mono text-[11px]">Cart</code>, <code class="text-accent font-mono text-[11px]">Payment</code>, <code class="text-accent font-mono text-[11px]">Receipt</code>, <code class="text-accent font-mono text-[11px]">Notification</code>, and <code class="text-accent font-mono text-[11px]">Sales</code>.
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            ACID compliance &bull; Foreign keys &bull; Audit logging (CR006)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database Entity Breakdown Table -->
+                <div class="overflow-x-auto rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 mb-10">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-zinc-100 dark:bg-zinc-800/70 border-b border-zinc-200 dark:border-zinc-800 font-mono text-zinc-500">
+                            <tr>
+                                <th class="p-4">Entity</th>
+                                <th class="p-4">Purpose in Architecture</th>
+                                <th class="p-4">Key Attributes</th>
+                                <th class="p-4">Integrity Constraints</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200/60 dark:divide-zinc-800 font-mono text-zinc-700 dark:text-zinc-300">
+                            <tr>
+                                <td class="p-4 font-bold text-accent">User</td>
+                                <td class="p-4 font-sans">Customer &amp; admin accounts, credentials, and roles</td>
+                                <td class="p-4">id, name, email, password, role</td>
+                                <td class="p-4 text-emerald-600 dark:text-emerald-400">CR010: Unique valid email constraint</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-accent">Product</td>
+                                <td class="p-4 font-sans">Item details, pricing, in-store shelf locator, stock</td>
+                                <td class="p-4">id, name, category, price, stock, shelf_loc, expiry</td>
+                                <td class="p-4 text-emerald-600 dark:text-emerald-400">CR008: Stock quantity cannot be negative</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-accent">Cart</td>
+                                <td class="p-4 font-sans">Staged items selected by customers prior to checkout</td>
+                                <td class="p-4">id, user_id, product_id, quantity</td>
+                                <td class="p-4 text-emerald-600 dark:text-emerald-400">Cascade delete on user logout/checkout</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-accent">Payment</td>
+                                <td class="p-4 font-sans">Financial transaction records and payment verification</td>
+                                <td class="p-4">id, user_id, amount, payment_method, status</td>
+                                <td class="p-4 text-emerald-600 dark:text-emerald-400">CR017: Immutable records after confirmation</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-accent">Receipt</td>
+                                <td class="p-4 font-sans">Digital customer receipts and audit transaction history</td>
+                                <td class="p-4">id, receipt_no, payment_id, items_json, timestamp</td>
+                                <td class="p-4 text-emerald-600 dark:text-emerald-400">CR013: Auto-generated unique receipt number</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-accent">Sales</td>
+                                <td class="p-4 font-sans">Aggregated business intelligence and revenue metrics</td>
+                                <td class="p-4">id, transaction_date, total_revenue, total_units</td>
+                                <td class="p-4 text-emerald-600 dark:text-emerald-400">CR016: Calculated only from successful sales</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Code Architecture Visual Block -->
+                <div class="p-6 sm:p-7 rounded-2xl bg-zinc-900 text-zinc-100 font-mono text-xs border border-zinc-800 shadow-xl overflow-x-auto">
+                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-zinc-800 text-zinc-400">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
+                            <span class="text-xs ml-2 text-zinc-300 font-bold">OrderCheckoutController.php (Transactional Integrity)</span>
+                        </span>
+                        <span class="text-[11px] text-zinc-500">PHP 8.2 &bull; Laravel Eloquent Transaction</span>
+                    </div>
+                    <pre class="leading-relaxed"><code><span class="text-purple-400">public function</span> <span class="text-blue-400">processOrder</span>(<span class="text-yellow-300">CheckoutRequest</span> $request)
+{
+    <span class="text-zinc-500">// Enforce ACID transactional consistency (CR008, CR013, CR017)</span>
+    <span class="text-purple-400">return</span> <span class="text-blue-300">DB</span>::<span class="text-blue-400">transaction</span>(<span class="text-purple-400">function</span> () <span class="text-purple-400">use</span> ($request) {
+        $cartItems = Cart::where(<span class="text-emerald-300">'user_id'</span>, auth()->id())->lockForUpdate()->get();
+
+        <span class="text-purple-400">foreach</span> ($cartItems <span class="text-purple-400">as</span> $item) {
+            $product = Product::findOrFail($item->product_id);
+            
+            <span class="text-zinc-500">// CR008: Stock quantities must not become negative</span>
+            <span class="text-purple-400">if</span> ($product->stock_quantity &lt; $item->quantity) {
+                <span class="text-purple-400">throw new</span> <span class="text-yellow-300">InsufficientStockException</span>(<span class="text-emerald-300">"Insufficient stock for: {$product->name}"</span>);
+            }
+            $product->decrement(<span class="text-emerald-300">'stock_quantity'</span>, $item->quantity);
+        }
+
+        <span class="text-zinc-500">// CR013: Auto-generate unique receipt and record immutable payment</span>
+        $payment = Payment::create([ ... ]);
+        $receipt = Receipt::create([
+            <span class="text-emerald-300">'receipt_no'</span> =&gt; <span class="text-emerald-300">'KB-'</span> . strtoupper(Str::random(8)),
+            <span class="text-emerald-300">'payment_id'</span> =&gt; $payment->id
+        ]);
+
+        Cart::where(<span class="text-emerald-300">'user_id'</span>, auth()->id())->delete();
+        <span class="text-purple-400">return</span> response()->json([<span class="text-emerald-300">'receipt'</span> =&gt; $receipt], 200);
+    });
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SDLC & QUALITY ASSURANCE ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20">
+            <div class="border-t border-zinc-100 dark:border-zinc-800 pt-16">
+                <div class="max-w-xl mb-8">
+                    <span class="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Agile Delivery &amp; Verification</span>
+                    <h2 class="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white mt-1">
+                        Agile Increments &amp; 100% Test Pass Rate
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">
+                        System built across 5 Agile milestones, with quality verified through unit, integration, system, and user acceptance testing (UAT).
+                    </p>
+                </div>
+
+                <!-- 5 Milestones Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-10">
+                    <div class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <span class="text-xs font-mono font-bold text-accent">M1 &bull; May</span>
+                        <h4 class="font-display font-bold text-sm text-zinc-900 dark:text-white mt-1">Project Planning</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1">Stakeholder interviews, scope definition &amp; SPMP preparation.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <span class="text-xs font-mono font-bold text-accent">M2 &bull; May</span>
+                        <h4 class="font-display font-bold text-sm text-zinc-900 dark:text-white mt-1">UI &amp; Requirements</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1">Canva wireframing, IEEE SRS specification &amp; review.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <span class="text-xs font-mono font-bold text-accent">M3 &bull; June</span>
+                        <h4 class="font-display font-bold text-sm text-zinc-900 dark:text-white mt-1">Core Modules</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1">Laravel backend, MySQL schema, shelf locator &amp; checkout.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <span class="text-xs font-mono font-bold text-accent">M4 &bull; June</span>
+                        <h4 class="font-display font-bold text-sm text-zinc-900 dark:text-white mt-1">Testing &amp; QA</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1">24 test cases executed, bug triage, UAT verification.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <span class="text-xs font-mono font-bold text-emerald-500">M5 &bull; June</span>
+                        <h4 class="font-display font-bold text-sm text-zinc-900 dark:text-white mt-1">Live Delivery</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1">LiteSpeed deployment, user manuals &amp; stakeholder demo.</p>
+                    </div>
+                </div>
+
+                <!-- Test Plan Summary Box -->
+                <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                            <h4 class="font-display font-bold text-lg text-zinc-900 dark:text-white">Software Test Plan Execution (Table 4.13)</h4>
+                        </div>
+                        <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1 max-w-xl">
+                            All 24 test cases across Account Management (TC001-004), Product Inventory (TC005-011), Cart &amp; Order (TC012-015), Notifications (TC016), Receipts (TC017-018), and Sales Reporting (TC019-020) were executed and passed with zero defects.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-6 shrink-0">
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-zinc-900 dark:text-white font-display">24</div>
+                            <div class="text-[11px] font-mono text-zinc-500">Executed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-emerald-500 font-display">24</div>
+                            <div class="text-[11px] font-mono text-zinc-500">Passed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-accent font-display">0</div>
+                            <div class="text-[11px] font-mono text-zinc-500">Failed</div>
+                        </div>
+                        <div class="text-center pl-4 border-l border-zinc-200 dark:border-zinc-800">
+                            <div class="text-2xl font-black text-emerald-500 font-display">100%</div>
+                            <div class="text-[11px] font-mono text-zinc-500">Pass Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TEAM & CONTRIBUTIONS ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20">
+            <div class="border-t border-zinc-100 dark:border-zinc-800 pt-16">
+                <div class="max-w-xl mb-8">
+                    <span class="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Faculty of Computing &amp; Meta-Technology</span>
+                    <h2 class="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white mt-1">
+                        Team Organization &amp; My Role
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">
+                        Collaborative development under the supervision of Dr. Harnani Binti Mat Zin at Universiti Pendidikan Sultan Idris (UPSI).
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Aiman Hafiz -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border-2 border-accent/40 shadow-sm relative">
+                        <div class="absolute -top-3 right-4">
+                            <span class="text-[10px] font-mono uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-accent text-white">
+                                My Contribution
+                            </span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white">
+                            Muhammad Aiman Hafiz
+                        </h3>
+                        <p class="text-xs font-mono text-accent font-medium mt-0.5 mb-3">
+                            System Analyst &amp; Core Developer
+                        </p>
+                        <ul class="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                            <li>&bull; Requirements analysis &amp; SRS preparation</li>
+                            <li>&bull; Core Laravel backend module programming</li>
+                            <li>&bull; Interactive product shelf locator implementation</li>
+                            <li>&bull; Shopping cart, transaction logic &amp; debugging</li>
+                            <li>&bull; Production deployment on LiteSpeed server</li>
+                        </ul>
+                    </div>
+
+                    <!-- Wong Chun Liang -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white">
+                            Wong Chun Liang
+                        </h3>
+                        <p class="text-xs font-mono text-zinc-500 font-medium mt-0.5 mb-3">
+                            Project Manager &amp; Testing QA
+                        </p>
+                        <ul class="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                            <li>&bull; Sprint planning &amp; Jira project management</li>
+                            <li>&bull; Test case authoring &amp; QA verification</li>
+                            <li>&bull; Stakeholder progress reporting</li>
+                        </ul>
+                    </div>
+
+                    <!-- Taufiq Hidayat -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white">
+                            Muhammad Taufiq Hidayat
+                        </h3>
+                        <p class="text-xs font-mono text-zinc-500 font-medium mt-0.5 mb-3">
+                            Database Administrator &amp; Developer
+                        </p>
+                        <ul class="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                            <li>&bull; MySQL database design &amp; normalization</li>
+                            <li>&bull; Table relationships &amp; query optimization</li>
+                            <li>&bull; Frontend component integration</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Documentation & Design Row -->
+                <div class="grid sm:grid-cols-2 gap-6 mt-6">
+                    <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <h4 class="font-display font-bold text-base text-zinc-900 dark:text-white">Irene Ling Zi Xin</h4>
+                        <p class="text-xs font-mono text-zinc-500">Documentation Lead</p>
+                        <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-2">
+                            Prepared IEEE-standard Software Requirements Specification (SRS), Software Project Management Plan (SPMP), and comprehensive User/Admin manuals.
+                        </p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <h4 class="font-display font-bold text-base text-zinc-900 dark:text-white">Nur Nadhira Binti Fauzi</h4>
+                        <p class="text-xs font-mono text-zinc-500">UI/UX Designer</p>
+                        <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-2">
+                            Authored user journey maps, wireframes in Canva, and designed visual icons for customer storefront and admin backoffice views.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== CALL TO ACTION / PRODUCTION ==================== -->
+        <section class="max-w-6xl mx-auto px-6">
+            <div class="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 text-white border border-zinc-800 text-center relative overflow-hidden">
+                <!-- Glowing orb -->
+                <div class="absolute -top-24 -left-24 w-72 h-72 bg-accent/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-2xl mx-auto">
+                    <span class="text-xs font-mono uppercase tracking-widest text-accent font-semibold">Live Production Deployment</span>
+                    <h2 class="font-display font-black text-3xl sm:text-4xl text-white mt-2 mb-4">
+                        Experience Kita Konbini in Action
+                    </h2>
+                    <p class="text-sm text-zinc-300 leading-relaxed mb-8">
+                        The live production build is actively hosted on LiteSpeed servers. Explore the student storefront catalog, test the in-store shelf locator, or inspect the complete GitHub repository.
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-center gap-4">
+                        <a href="https://d06375.schtg.com/kita-konbini-4/public/login" target="_blank" rel="noopener noreferrer"
+                            class="btn-shimmer inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm px-8 py-3.5 rounded-full transition-all shadow-xl shadow-emerald-600/20">
+                            <span>Open Live Website</span>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+
+                        <a href="https://github.com/Aiman029/kitakombini" target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-medium text-sm px-8 py-3.5 rounded-full border border-white/20 transition-all">
+                            <span>View Source Code on GitHub</span>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+
+                        <a href="projects.html"
+                            class="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-400 hover:text-white transition-colors w-full sm:w-auto mt-2 sm:mt-0">
+                            <span>&larr; Back to all projects</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="border-t border-zinc-100 dark:border-zinc-900 py-8 bg-white dark:bg-zinc-950">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
+            <div>
+                &copy; 2026 Muhammad Aiman Hafiz Bin Rosli &bull; Software Engineering Portfolio
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="hover:text-accent transition-colors">Portfolio</a>
+                <span>&bull;</span>
+                <a href="projects.html" class="hover:text-accent transition-colors">Projects</a>
+                <span>&bull;</span>
+                <a href="rrh-case-study.html" class="hover:text-accent transition-colors">RRH Game Case Study</a>
+                <span>&bull;</span>
+                <a href="https://github.com/Aiman029" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Alpine App State -->
+    <script>
+        function konbiniCaseStudyApp() {
+            return {
+                dark: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+                scrolled: false,
+                activeRole: 'user',
+                activeIndex: 0,
+
+                userScreenshots: [
+                    {
+                        src: '../assets/kitakombini/user/landpage.png',
+                        title: 'Customer Storefront Landing Page',
+                        description: 'Clean, responsive e-commerce storefront presenting featured minimart snacks, daily deals, and intuitive top navigation.'
+                    },
+                    {
+                        src: '../assets/kitakombini/user/filterbycate.png',
+                        title: 'Product Categorization & Instant Filter',
+                        description: 'Interactive category filter allowing students to quickly narrow products down to Drinks, Snacks, Stationery, or Frozen Foods.'
+                    },
+                    {
+                        src: '../assets/kitakombini/user/favou.png',
+                        title: 'Favorites & Wishlist Management',
+                        description: 'Allows authenticated students to bookmark favorite snacks for quick reordering during busy study intervals.'
+                    },
+                    {
+                        src: '../assets/kitakombini/user/addtocart.png',
+                        title: 'Interactive Shopping Cart Drawer',
+                        description: 'Real-time cart state management with quantity steppers, subtotal updates, and instant stock verification.'
+                    },
+                    {
+                        src: '../assets/kitakombini/user/confirmorder.png',
+                        title: 'Checkout & Order Confirmation',
+                        description: 'Structured order summary screen displaying breakdown of items, quantities, and payable balance.'
+                    },
+                    {
+                        src: '../assets/kitakombini/user/payment.png',
+                        title: 'Secure Payment Processing Interface',
+                        description: 'Payment gateway view handling online payment confirmations and transactional state verification.'
+                    },
+                    {
+                        src: '../assets/kitakombini/user/receipt.png',
+                        title: 'Digital Receipt & Order History',
+                        description: 'Automated unique receipt generation (CR013) with full purchase timestamps, downloadable for student records.'
+                    },
+                    {
+                        src: '../assets/kitakombini/user/profile-user.png',
+                        title: 'Customer Account Profile',
+                        description: 'Profile management view where students can update contact details, change passwords (CR011), and view past orders.'
+                    }
+                ],
+
+                adminScreenshots: [
+                    {
+                        src: '../assets/kitakombini/admin/adminbo.png',
+                        title: 'Executive Admin Backoffice Dashboard',
+                        description: 'Central operations hub providing real-time store metrics, quick module navigation, and inventory status alerts.'
+                    },
+                    {
+                        src: '../assets/kitakombini/admin/CrudPro.png',
+                        title: 'Product Catalog CRUD & Inventory Control',
+                        description: 'Comprehensive product table allowing administrators to add, edit pricing, update stock, and assign physical shelf coordinates.'
+                    },
+                    {
+                        src: '../assets/kitakombini/admin/adddelCat.png',
+                        title: 'Category Taxonomy Management',
+                        description: 'Allows store staff to create, modify, and prune inventory categories to match seasonal restock cycles.'
+                    },
+                    {
+                        src: '../assets/kitakombini/admin/addupstock.png',
+                        title: 'Stock Inflow & Inventory Level Adjustments',
+                        description: 'Direct stock level modification interface enforcing non-negative quantity constraints (CR008).'
+                    },
+                    {
+                        src: '../assets/kitakombini/admin/popup.png',
+                        title: 'Action Required: Low-Stock & Expiry Alert Modal (FR006)',
+                        description: 'Proactive administrative alert modal alerting managers to expired products and items nearing threshold stock (<= 3 units) upon dashboard login.'
+                    },
+                    {
+                        src: '../assets/kitakombini/admin/removeuser.png',
+                        title: 'Customer Account Administration',
+                        description: 'User governance table allowing administrators to monitor registered accounts and remove unauthorized access.'
+                    },
+                    {
+                        src: '../assets/kitakombini/admin/revenuerep.png',
+                        title: 'Real-Time Sales & Revenue Analytics (FR019/FR020)',
+                        description: 'Executive reporting screen calculating total revenue from completed transactions (CR016) and daily sales volumes.'
+                    }
+                ],
+
+                get currentList() {
+                    return this.activeRole === 'user' ? this.userScreenshots : this.adminScreenshots;
+                },
+
+                toggleTheme() {
+                    this.dark = !this.dark;
+                    localStorage.setItem('theme', this.dark ? 'dark' : 'light');
+                    if (this.dark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                },
+
+                nextSlide() {
+                    this.activeIndex = (this.activeIndex + 1) % this.currentList.length;
+                },
+
+                prevSlide() {
+                    this.activeIndex = (this.activeIndex - 1 + this.currentList.length) % this.currentList.length;
+                },
+
+                init() {
+                    window.addEventListener('scroll', () => {
+                        this.scrolled = window.scrollY > 20;
+                    }, { passive: true });
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

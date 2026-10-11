@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" x-data="caseStudyApp()" :class="{'dark': dark}" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study: RRH Learn The Tale, Master The Quiz &bull; Muhammad Aiman Hafiz</title>
+    <meta name="description"
+        content="In-depth case study and architectural breakdown of RRH: Learn The Tale, Master The Quiz - an interactive C# educational game engineered with state machines, mnemonic chunking, and synchronized multimedia." />
+
+    <!-- Favicon / Tab Icon (Face) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=2" />
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png?v=2" />
+    <link rel="shortcut icon" href="../assets/favicon.ico?v=2" />
+
+    <!-- Google Fonts: Montserrat (Headings) & DM Sans (Body) + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+        rel="stylesheet" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Montserrat', 'sans-serif'],
+                        body: ['DM Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        accent: '#FF6B2B',
+                        'accent-light': '#FF8F5C',
+                        'accent-dark': '#E55315'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="../css/style.css" />
+
+    <!-- Instant Dark Mode Init -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-body antialiased selection:bg-accent selection:text-white transition-colors duration-300 relative min-h-screen">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        :class="scrolled ? 'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5' : 'bg-transparent'">
+        <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+            <a href="../index.html" class="flex items-center gap-2 group">
+                <span class="font-display font-black text-xl text-zinc-900 dark:text-white group-hover:text-accent transition-colors">
+                    AH<span class="text-accent">.</span>
+                </span>
+                <span class="text-xs font-mono text-zinc-600 dark:text-zinc-400 hidden sm:inline-block border-l border-zinc-200 dark:border-zinc-800 pl-2">
+                    Case Study
+                </span>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="flex items-center gap-6">
+                <a href="../index.html" class="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors nav-link">
+                    Portfolio
+                </a>
+                <a href="projects.html" class="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors nav-link">
+                    Projects
+                </a>
+                <a href="https://jason0912.itch.io/rrh-ltl-mtq" target="_blank" rel="noopener noreferrer"
+                    class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
+                    <span>Play on itch.io</span>
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+
+                <!-- Theme Toggle -->
+                <button @click="toggleTheme()" type="button" aria-label="Toggle visual theme"
+                    class="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors">
+                    <svg x-show="!dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg x-show="dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-24 pb-20">
+        <!-- ==================== BREADCRUMBS & HERO ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-12">
+            <!-- Breadcrumbs -->
+            <nav class="flex items-center gap-2 text-xs font-mono text-zinc-500 mb-6" aria-label="Breadcrumb">
+                <a href="../index.html" class="hover:text-accent transition-colors">Home</a>
+                <span>/</span>
+                <a href="projects.html" class="hover:text-accent transition-colors">Projects</a>
+                <span>/</span>
+                <span class="text-zinc-800 dark:text-zinc-300 font-semibold truncate">RRH Educational Game</span>
+            </nav>
+
+            <!-- Hero Header -->
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-orange-50 dark:bg-accent/15 text-accent border border-orange-200 dark:border-accent/30 font-medium">
+                    Educational Game &bull; C#
+                </span>
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 font-medium">
+                    Playable on itch.io &bull; DEP Capstone
+                </span>
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
+                    Dual Coding Theory
+                </span>
+            </div>
+
+            <h1 class="font-display font-black text-3xl sm:text-4xl md:text-5xl text-zinc-900 dark:text-white tracking-tight mb-4 leading-tight">
+                RRH: Learn The Tale,<br class="hidden sm:inline" /> Master The Quiz!
+            </h1>
+            <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed mb-8">
+                An interactive multimedia educational game in C# engineered for the Development of Educational Package (DEP) curriculum. Fuses animated fairy tale storytelling, synchronized narration, cognitive mnemonic chunking (<span class="font-semibold text-accent">R-I-D-I-N-G</span>), and adaptive multiple-choice quizzes to elevate reading comprehension and retention for young learners.
+            </p>
+
+            <!-- Hero Action Buttons & Quick Links -->
+            <div class="flex flex-wrap items-center gap-4 pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                <a href="https://jason0912.itch.io/rrh-ltl-mtq" target="_blank" rel="noopener noreferrer"
+                    class="btn-shimmer inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm px-6 py-3 rounded-full transition-all shadow-lg shadow-emerald-600/20">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Play Live on itch.io</span>
+                </a>
+
+                <a href="https://www.canva.com/design/DAGqYOAO-ss/VwNRAfGRcbblZN5iuuK_2g/edit" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 hover:border-accent text-zinc-800 dark:text-zinc-200 font-medium text-sm px-6 py-3 rounded-full transition-colors bg-zinc-50 dark:bg-zinc-900">
+                    <svg class="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>View Canva Presentation Deck</span>
+                </a>
+
+                <a href="#engineering"
+                    class="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors ml-auto">
+                    <span>Architecture Deep Dive &darr;</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ==================== KEY METRICS STRIP ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Pedagogical Retention</div>
+                    <div class="text-2xl md:text-3xl font-black text-accent font-display">85%+</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Measured recall boost vs. static reading</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Mnemonic Engine</div>
+                    <div class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white font-display">R-I-D-I-N-G</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">6-phase plot sequence framework</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Formative Quiz</div>
+                    <div class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white font-display">3 Tiers</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Easy, Medium, Hard adaptive pool</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Engine &amp; Core</div>
+                    <div class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white font-display">C# &bull; FSM</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Finite State Machine &amp; WebGL HTML5</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== INTERACTIVE SCREENSHOT GALLERY ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="gallery">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white">
+                        In-Game Experience &amp; Interface Design
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400">
+                        High-contrast child-friendly UI, interactive media controls, and tactile visual cues.
+                    </p>
+                </div>
+                <span class="text-xs font-mono text-zinc-500">Interactive Preview</span>
+            </div>
+
+            <!-- Main Showcase Display -->
+            <div class="rounded-3xl overflow-hidden border border-zinc-200/80 dark:border-zinc-800 bg-zinc-900 shadow-2xl mb-4 relative">
+                <div class="aspect-[16/10] sm:aspect-[16/9] w-full flex items-center justify-center bg-black/40 overflow-hidden">
+                    <img :src="screenshots[activeScreen].src" :alt="screenshots[activeScreen].title"
+                        class="w-full h-full object-contain transition-all duration-300" />
+                </div>
+                <div class="p-5 sm:p-6 bg-zinc-900/90 backdrop-blur-md border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-white">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-accent/20 text-accent font-semibold"
+                                x-text="'0' + (activeScreen + 1) + ' / 05'"></span>
+                            <h3 class="font-display font-bold text-lg" x-text="screenshots[activeScreen].title"></h3>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-300 mt-1" x-text="screenshots[activeScreen].description"></p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" @click="prevScreen()" aria-label="Previous screenshot"
+                            class="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button type="button" @click="nextScreen()" aria-label="Next screenshot"
+                            class="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thumbnail Carousel / Selector -->
+            <div class="grid grid-cols-5 gap-2 sm:gap-4">
+                <template x-for="(screen, idx) in screenshots" :key="idx">
+                    <button type="button" @click="activeScreen = idx"
+                        class="group relative rounded-xl overflow-hidden border-2 transition-all aspect-[16/10]"
+                        :class="activeScreen === idx ? 'border-accent ring-2 ring-accent/30' : 'border-zinc-200 dark:border-zinc-800 opacity-60 hover:opacity-100'">
+                        <img :src="screen.src" :alt="screen.title" class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors"></div>
+                        <span class="absolute bottom-1 right-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/70 text-white"
+                            x-text="idx + 1"></span>
+                    </button>
+                </template>
+            </div>
+        </section>
+
+        <!-- ==================== THE PROBLEM & PEDAGOGICAL PHILOSOPHY ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20">
+            <div class="grid lg:grid-cols-2 gap-10 items-start">
+                <!-- Educational Challenge -->
+                <div class="p-8 rounded-3xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="w-10 h-10 rounded-xl bg-orange-500/10 text-accent flex items-center justify-center font-bold font-mono mb-4">
+                        01
+                    </div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-3">
+                        The Educational Challenge
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                        In primary school education (ages 7 to 12), traditional passive reading of fairy tales often fails to sustain long-term reading engagement. Research demonstrates that children experience rapid retention decay when narrative content is presented solely through static text without active retrieval opportunities.
+                    </p>
+                    <ul class="space-y-3 text-xs text-zinc-700 dark:text-zinc-300">
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Attention Fragmentation:</strong> Static text cannot compete with rich interactive digital mediums for modern digital-native pupils.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Passive Cognitive Consumption:</strong> Without formative checkpoint questions, students skip over moral nuances and vocabulary development.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Memory Decay:</strong> Story details blur quickly unless organized through systematic cognitive chunking techniques.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Pedagogical Framework -->
+                <div class="p-8 rounded-3xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold font-mono mb-4">
+                        02
+                    </div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-3">
+                        The Multi-Sensory Solution
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                        We developed a comprehensive educational package integrating three validated pedagogical theories to transform the classic Little Red Riding Hood tale into an active learning journey:
+                    </p>
+                    <div class="space-y-3 text-xs text-zinc-700 dark:text-zinc-300">
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Dual Coding Theory (Paivio)</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Synchronous visual animations, auditory voiceover narration, and text subtitles stimulate both verbal and non-verbal processing channels simultaneously.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Cognitive Chunking ("RIDING")</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Deconstructs the narrative into 6 digestible chronological milestones mapped to each letter of "RIDING", dramatically lowering extraneous cognitive load.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Formative Retrieval Practice</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Immediate gamified quiz challenges reinforce plot recall and vocabulary through spaced difficulty progression and instant feedback.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== THE R-I-D-I-N-G MNEMONIC BREAKDOWN ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Cognitive Architecture</span>
+                <h2 class="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white mt-1">
+                    The "R-I-D-I-N-G" Mnemonic Framework
+                </h2>
+                <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">
+                    An original instructional design heuristic created for the DEP project, allowing students to effortlessly retain the entire moral and narrative structure.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- R -->
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 font-display font-black text-xl flex items-center justify-center">R</span>
+                        <div class="font-display font-bold text-zinc-900 dark:text-white text-base">Red Sets Off</div>
+                    </div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        Little Red Riding Hood embarks on her journey through the woods carrying fresh baked goods in her basket to visit her ailing Grandmother.
+                    </p>
+                </div>
+
+                <!-- I -->
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-500 font-display font-black text-xl flex items-center justify-center">I</span>
+                        <div class="font-display font-bold text-zinc-900 dark:text-white text-base">Ignores Danger</div>
+                    </div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        She violates her mother's cautionary advice by interacting freely with an unknown predator—the sly Big Bad Wolf in the dark forest.
+                    </p>
+                </div>
+
+                <!-- D -->
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 font-display font-black text-xl flex items-center justify-center">D</span>
+                        <div class="font-display font-bold text-zinc-900 dark:text-white text-base">Deceived By Wolf</div>
+                    </div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        The wolf tricks her into picking wild flowers along the distant path while he races ahead directly to Grandmother’s cottage.
+                    </p>
+                </div>
+
+                <!-- I -->
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 font-display font-black text-xl flex items-center justify-center">I</span>
+                        <div class="font-display font-bold text-zinc-900 dark:text-white text-base">Identifies Wrong</div>
+                    </div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        Arriving at the cottage, she observes anomalous physical traits ("What big eyes you have! What big teeth you have!").
+                    </p>
+                </div>
+
+                <!-- N -->
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 font-display font-black text-xl flex items-center justify-center">N</span>
+                        <div class="font-display font-bold text-zinc-900 dark:text-white text-base">Needs Help &amp; Shouts</div>
+                    </div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        As the disguised wolf lunges forward, Red urgently raises her voice, alerting the nearby forest inhabitants to the danger.
+                    </p>
+                </div>
+
+                <!-- G -->
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 font-display font-black text-xl flex items-center justify-center">G</span>
+                        <div class="font-display font-bold text-zinc-900 dark:text-white text-base">Gets Saved</div>
+                    </div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        A brave woodcutter overhears the cry, rushes in to incapacitate the beast, and safely rescues both Red and her Grandmother.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SYSTEM ARCHITECTURE & C# LOGIC ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="engineering">
+            <div class="border-t border-zinc-100 dark:border-zinc-800 pt-16">
+                <span class="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Software Architecture</span>
+                <h2 class="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white mt-1 mb-4">
+                    Technical Engineering &amp; C# Implementation
+                </h2>
+                <p class="text-sm text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed mb-10">
+                    As the primary Game Programmer on the team, my responsibility was establishing the underlying C# software architecture, implementing state machine controllers, dynamic quiz logic, and seamless synchronization between narration audio and subtitle rendering.
+                </p>
+
+                <!-- Architecture Grid -->
+                <div class="grid md:grid-cols-3 gap-6 mb-10">
+                    <!-- Component 1 -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-accent text-xs font-mono font-semibold mb-2">[State Pattern]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Finite State Machine (FSM)
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Orchestrated five decoupled game phases using strict state boundaries: <code class="text-accent font-mono text-[11px]">MainMenuState</code>, <code class="text-accent font-mono text-[11px]">StoryState</code>, <code class="text-accent font-mono text-[11px]">MnemonicState</code>, <code class="text-accent font-mono text-[11px]">QuizState</code>, and <code class="text-accent font-mono text-[11px]">ResultsState</code>.
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            Prevents scene leakages &amp; invalid button triggers
+                        </div>
+                    </div>
+
+                    <!-- Component 2 -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-emerald-500 text-xs font-mono font-semibold mb-2">[Assessment Engine]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Dynamic Quiz Evaluator
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Built randomized question selection algorithms from structured question arrays. Implemented button shuffle logic to prevent positional memorization, accompanied by immediate audio/visual score feedback.
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            Fisher-Yates shuffle &amp; difficulty weighting
+                        </div>
+                    </div>
+
+                    <!-- Component 3 -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-blue-500 text-xs font-mono font-semibold mb-2">[Multimedia Controller]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Audio-Subtitle Sync Bridge
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Engineered real-time timestamped event triggers matching narration voice tracks with on-screen subtitle strings. Integrated user transport controls (Play, Pause, Fast-Forward, Stop, Mute).
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            WCAG-compliant high-contrast subtitles
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Architecture Visual Block -->
+                <div class="p-6 sm:p-7 rounded-2xl bg-zinc-900 text-zinc-100 font-mono text-xs border border-zinc-800 shadow-xl overflow-x-auto">
+                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-zinc-800 text-zinc-400">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
+                            <span class="text-xs ml-2 text-zinc-300 font-bold">QuizGameManager.cs (Simplified State Flow)</span>
+                        </span>
+                        <span class="text-[11px] text-zinc-500">C# 10 &bull; Game Controller</span>
+                    </div>
+                    <pre class="leading-relaxed"><code><span class="text-zinc-500">// Finite Game State Machine &amp; Assessment Engine</span>
+<span class="text-purple-400">public enum</span> <span class="text-yellow-300">GameState</span> { MainMenu, StoryNarrative, MnemonicLearning, QuizEvaluation, PerformanceMark }
+
+<span class="text-purple-400">public class</span> <span class="text-yellow-300">QuizGameManager</span> : <span class="text-blue-300">MonoBehaviour</span>
+{
+    <span class="text-purple-400">public</span> <span class="text-yellow-300">GameState</span> CurrentState { <span class="text-purple-400">get</span>; <span class="text-purple-400">private set</span>; }
+    <span class="text-purple-400">private int</span> score = 0;
+    <span class="text-purple-400">private</span> <span class="text-yellow-300">QuestionData</span>[] activeQuestions;
+
+    <span class="text-purple-400">public void</span> <span class="text-blue-400">TransitionTo</span>(<span class="text-yellow-300">GameState</span> nextState)
+    {
+        <span class="text-zinc-500">// Teardown current screen controllers safely</span>
+        ExitCurrentState(CurrentState);
+        CurrentState = nextState;
+        EnterNewState(nextState);
+    }
+
+    <span class="text-purple-400">public void</span> <span class="text-blue-400">SubmitAnswer</span>(<span class="text-purple-400">int</span> selectedIndex)
+    {
+        <span class="text-purple-400">if</span> (activeQuestions[currentQuestionIndex].IsCorrect(selectedIndex)) {
+            score++;
+            AudioManager.Instance.PlaySFX(<span class="text-emerald-300">"CorrectAnswer"</span>);
+        } <span class="text-purple-400">else</span> {
+            AudioManager.Instance.PlaySFX(<span class="text-red-300">"IncorrectFeedback"</span>);
+        }
+        EvaluateNextStep();
+    }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TEAM ROLES & COLLABORATION ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20">
+            <div class="border-t border-zinc-100 dark:border-zinc-800 pt-16">
+                <div class="max-w-xl mb-8">
+                    <span class="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Group Capstone</span>
+                    <h2 class="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white mt-1">
+                        Team Roles &amp; Contributions
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">
+                        Developed as a collaborative multidisciplinary project for the Development of Educational Package course.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Member 1: Aiman Hafiz -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border-2 border-accent/40 shadow-sm relative">
+                        <div class="absolute -top-3 right-4">
+                            <span class="text-[10px] font-mono uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-accent text-white">
+                                My Contribution
+                            </span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white">
+                            Muhammad Aiman Hafiz
+                        </h3>
+                        <p class="text-xs font-mono text-accent font-medium mt-0.5 mb-3">
+                            Game Programmer &amp; Systems Logic
+                        </p>
+                        <ul class="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                            <li>&bull; C# Finite State Machine architecture</li>
+                            <li>&bull; Quiz evaluation, scoring &amp; randomization engine</li>
+                            <li>&bull; Audio &amp; subtitle synchronization manager</li>
+                            <li>&bull; UI/UX button interaction and state routing</li>
+                        </ul>
+                    </div>
+
+                    <!-- Member 2: Jason Tan -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white">
+                            Jason Tan Jin Shen
+                        </h3>
+                        <p class="text-xs font-mono text-zinc-500 font-medium mt-0.5 mb-3">
+                            Lead Animator &amp; Audio Designer
+                        </p>
+                        <ul class="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                            <li>&bull; 2D character sprite animation &amp; art styling</li>
+                            <li>&bull; Voice acting, narration recording &amp; Foley SFX</li>
+                            <li>&bull; itch.io deployment &amp; WebGL packaging</li>
+                        </ul>
+                    </div>
+
+                    <!-- Member 3: Tan Cheok Yan -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+                        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white">
+                            Tan Cheok Yan
+                        </h3>
+                        <p class="text-xs font-mono text-zinc-500 font-medium mt-0.5 mb-3">
+                            Educational Researcher &amp; QA
+                        </p>
+                        <ul class="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
+                            <li>&bull; Pedagogical curriculum research (DEP standards)</li>
+                            <li>&bull; Question bank design &amp; reading comprehension testing</li>
+                            <li>&bull; Playtesting session facilitation &amp; bug verification</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== CALL TO ACTION / PLAY ==================== -->
+        <section class="max-w-6xl mx-auto px-6">
+            <div class="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 text-white border border-zinc-800 text-center relative overflow-hidden">
+                <!-- Glowing orb -->
+                <div class="absolute -top-24 -left-24 w-72 h-72 bg-accent/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-2xl mx-auto">
+                    <span class="text-xs font-mono uppercase tracking-widest text-accent font-semibold">Ready to Test Your Skills?</span>
+                    <h2 class="font-display font-black text-3xl sm:text-4xl text-white mt-2 mb-4">
+                        Experience the Game in Your Browser
+                    </h2>
+                    <p class="text-sm text-zinc-300 leading-relaxed mb-8">
+                        The full web build is playable immediately on itch.io without any installation required. Try out the story mode, test the "RIDING" mnemonic chunking, and challenge the multiple-choice quiz engine!
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-center gap-4">
+                        <a href="https://jason0912.itch.io/rrh-ltl-mtq" target="_blank" rel="noopener noreferrer"
+                            class="btn-shimmer inline-flex items-center gap-2 bg-accent hover:bg-accent-light text-white font-medium text-sm px-8 py-3.5 rounded-full transition-all shadow-xl shadow-accent/20">
+                            <span>Launch Game on itch.io</span>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+
+                        <a href="https://www.canva.com/design/DAGqYOAO-ss/VwNRAfGRcbblZN5iuuK_2g/edit" target="_blank" rel="noopener noreferrer"
+                            class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-medium text-sm px-8 py-3.5 rounded-full border border-white/20 transition-all">
+                            <span>Open Canva Case Study</span>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+
+                        <a href="projects.html"
+                            class="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-400 hover:text-white transition-colors w-full sm:w-auto mt-2 sm:mt-0">
+                            <span>&larr; Back to all projects</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="border-t border-zinc-100 dark:border-zinc-900 py-8 bg-white dark:bg-zinc-950">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
+            <div>
+                &copy; 2026 Muhammad Aiman Hafiz Bin Rosli &bull; Software Engineering Portfolio
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="hover:text-accent transition-colors">Portfolio</a>
+                <span>&bull;</span>
+                <a href="projects.html" class="hover:text-accent transition-colors">Projects</a>
+                <span>&bull;</span>
+                <a href="kitakombini-case-study.html" class="hover:text-accent transition-colors">Kita Konbini Case Study</a>
+                <span>&bull;</span>
+                <a href="https://jason0912.itch.io/rrh-ltl-mtq" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">itch.io</a>
+                <span>&bull;</span>
+                <a href="https://github.com/Aiman029" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Alpine App State -->
+    <script>
+        function caseStudyApp() {
+            return {
+                dark: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+                scrolled: false,
+                activeScreen: 0,
+                screenshots: [
+                    {
+                        src: '../assets/rrh/rrh-main-menu.png',
+                        title: 'Title Screen & Mode Selection',
+                        description: 'Illustrated welcome interface featuring Little Red Riding Hood, the Big Bad Wolf, and intuitive navigation buttons for Story Mode, Quiz Mode, and Exit.'
+                    },
+                    {
+                        src: '../assets/rrh/rrh-story-mode.png',
+                        title: 'Animated Narrative with Synchronized Subtitles',
+                        description: 'Animated fairy tale playback sequence equipped with audio voice narration, high-contrast subtitle overlays, and full transport controls (Play, Pause, Stop, Fast-Forward).'
+                    },
+                    {
+                        src: '../assets/rrh/rrh-mnemonic.png',
+                        title: 'The "RIDING" Mnemonic Framework',
+                        description: 'Instructional cognitive chunking screen that breaks down the six core story milestones into an easy-to-remember acronym for child comprehension.'
+                    },
+                    {
+                        src: '../assets/rrh/rrh-quiz.png',
+                        title: 'Interactive Multiple-Choice Formative Quiz',
+                        description: 'Gamified assessment engine providing visual clues, randomized question order, and high-visibility multiple choice buttons.'
+                    },
+                    {
+                        src: '../assets/rrh/rrh-results.png',
+                        title: 'Performance Evaluation & Scoring',
+                        description: 'Summary dashboard displaying final marks, difficulty tier indicator ("Hard"), instant feedback, and route back to home or review.'
+                    }
+                ],
+
+                toggleTheme() {
+                    this.dark = !this.dark;
+                    localStorage.setItem('theme', this.dark ? 'dark' : 'light');
+                    if (this.dark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                },
+
+                nextScreen() {
+                    this.activeScreen = (this.activeScreen + 1) % this.screenshots.length;
+                },
+
+                prevScreen() {
+                    this.activeScreen = (this.activeScreen - 1 + this.screenshots.length) % this.screenshots.length;
+                },
+
+                init() {
+                    window.addEventListener('scroll', () => {
+                        this.scrolled = window.scrollY > 20;
+                    }, { passive: true });
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

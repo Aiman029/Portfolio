@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" x-data="tasukuCaseStudyApp()" :class="{'dark': dark}" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study: TASUKU Anime Quest Planner &bull; Muhammad Aiman Hafiz</title>
+    <meta name="description"
+        content="In-depth Software Engineering case study of TASUKU - a gamified anime-themed quest planner and to-do application engineered with Flutter, Dart, Hive NoSQL, and Local Notifications." />
+
+    <!-- Favicon / Tab Icon (Face) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=2" />
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png?v=2" />
+    <link rel="shortcut icon" href="../assets/favicon.ico?v=2" />
+
+    <!-- Google Fonts: Montserrat (Headings) & DM Sans (Body) + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+        rel="stylesheet" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Montserrat', 'sans-serif'],
+                        body: ['DM Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        accent: '#FF6B2B',
+                        'accent-light': '#FF8F5C',
+                        'accent-dark': '#E55315',
+                        sakura: '#FF70A6',
+                        'sakura-light': '#FFB5D0'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="../css/style.css" />
+
+    <!-- Instant Dark Mode Init -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-body antialiased selection:bg-accent selection:text-white transition-colors duration-300 relative min-h-screen">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        :class="scrolled ? 'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5' : 'bg-transparent'">
+        <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+            <a href="../index.html" class="flex items-center gap-2 group">
+                <span class="font-display font-black text-xl text-zinc-900 dark:text-white group-hover:text-accent transition-colors">
+                    AH<span class="text-accent">.</span>
+                </span>
+                <span class="text-xs font-mono text-zinc-600 dark:text-zinc-400 hidden sm:inline-block border-l border-zinc-200 dark:border-zinc-800 pl-2">
+                    Case Study
+                </span>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="flex items-center gap-6">
+                <a href="../index.html" class="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors nav-link">
+                    Portfolio
+                </a>
+                <a href="projects.html" class="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors nav-link">
+                    Projects
+                </a>
+                <a href="https://github.com/Aiman029/Tasuku" target="_blank" rel="noopener noreferrer"
+                    class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:border-accent transition-all text-zinc-800 dark:text-zinc-200">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                    </svg>
+                    <span>GitHub Repo</span>
+                </a>
+
+                <!-- Theme Toggle -->
+                <button @click="toggleTheme()" type="button" aria-label="Toggle visual theme"
+                    class="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors">
+                    <svg x-show="!dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg x-show="dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-24 pb-20">
+        <!-- ==================== BREADCRUMBS & HERO ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-12">
+            <!-- Breadcrumbs -->
+            <nav class="flex items-center gap-2 text-xs font-mono text-zinc-500 mb-6" aria-label="Breadcrumb">
+                <a href="../index.html" class="hover:text-accent transition-colors">Home</a>
+                <span>/</span>
+                <a href="projects.html" class="hover:text-accent transition-colors">Projects</a>
+                <span>/</span>
+                <span class="text-zinc-800 dark:text-zinc-300 font-semibold truncate">TASUKU Case Study</span>
+            </nav>
+
+            <!-- Hero Badges -->
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-orange-50 dark:bg-accent/15 text-accent border border-orange-200 dark:border-accent/30 font-medium">
+                    Mobile Application &bull; Flutter &amp; Dart
+                </span>
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 border border-pink-200 dark:border-pink-800/60 font-medium">
+                    Anime Quest Planner &bull; Gamified EXP System
+                </span>
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 font-medium">
+                    Offline-First &bull; Hive NoSQL
+                </span>
+                <span class="text-xs font-mono px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium">
+                    Open Source &bull; Active Project
+                </span>
+            </div>
+
+            <h1 class="font-display font-black text-3xl sm:text-4xl md:text-5xl text-zinc-900 dark:text-white tracking-tight mb-4 leading-tight">
+                TASUKU:<br class="hidden sm:inline" /> Anime Quest Planner &amp; Schedule Management
+            </h1>
+            <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed mb-8">
+                A stylish cross-platform mobile to-do and schedule planner engineered with <span class="font-semibold text-zinc-900 dark:text-white">Flutter, Dart, Hive NoSQL, and Local Notifications</span>. Transforms everyday task execution into an engaging role-playing quest experience featuring dynamic user level-ups, EXP momentum tracking, subtask progress breakdown, scheduled push notifications, interactive calendar planning, and weekly productivity analytics.
+            </p>
+
+            <!-- Hero Action Buttons & Quick Links -->
+            <div class="flex flex-wrap items-center gap-4 pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                <a href="https://github.com/Aiman029/Tasuku" target="_blank" rel="noopener noreferrer"
+                    class="btn-shimmer inline-flex items-center gap-2 bg-accent hover:bg-accent-light text-white font-medium text-sm px-6 py-3 rounded-full transition-all shadow-lg shadow-accent/20">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                    </svg>
+                    <span>View Repository on GitHub</span>
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+
+                <a href="projects.html"
+                    class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 hover:border-accent text-zinc-800 dark:text-zinc-200 font-medium text-sm px-6 py-3 rounded-full transition-colors bg-zinc-50 dark:bg-zinc-900">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Back to All Projects</span>
+                </a>
+
+                <a href="#showcase"
+                    class="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-accent transition-colors sm:ml-auto">
+                    <span>Explore Interface Showcase &darr;</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ==================== KEY METRICS STRIP ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Local Storage</div>
+                    <div class="text-2xl md:text-3xl font-black text-accent font-display">100% Offline</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Hive NoSQL key-value persistence</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Performance</div>
+                    <div class="text-2xl md:text-3xl font-black text-emerald-500 font-display">0ms Delay</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Instant synchronous box reads</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Gamification</div>
+                    <div class="text-2xl md:text-3xl font-black text-pink-500 font-display">EXP &amp; Levels</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Dynamic quest progression rewards</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Alert Engine</div>
+                    <div class="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white font-display">Native Push</div>
+                    <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1">Exact timezone local notifications</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DUAL-TAB INTERACTIVE SHOWCASE ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="showcase">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white">
+                        Mobile Interface &amp; Feature Gallery
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400">
+                        Explore the complete mobile client experience across quest management, task creation, calendar scheduling, and analytics.
+                    </p>
+                </div>
+
+                <!-- Showcase Category Tab Buttons -->
+                <div class="inline-flex p-1 bg-zinc-100 dark:bg-zinc-900 rounded-full border border-zinc-200 dark:border-zinc-800">
+                    <button type="button" @click="activeCategory = 'quest'; activeIndex = 0"
+                        :class="activeCategory === 'quest' ? 'bg-accent text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'"
+                        class="px-5 py-2 rounded-full text-xs font-medium transition-all">
+                        Quest &amp; Task Flow (4)
+                    </button>
+                    <button type="button" @click="activeCategory = 'tools'; activeIndex = 0"
+                        :class="activeCategory === 'tools' ? 'bg-accent text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'"
+                        class="px-5 py-2 rounded-full text-xs font-medium transition-all">
+                        Calendar &amp; Analytics (3)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Showcase Display (Mobile Framing) -->
+            <div class="rounded-3xl overflow-hidden border border-zinc-200/80 dark:border-zinc-800 bg-zinc-900 shadow-2xl mb-4 relative">
+                <div class="w-full py-8 px-4 flex items-center justify-center bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 min-h-[480px] sm:min-h-[560px]">
+                    <!-- Phone Frame Container -->
+                    <div class="relative max-w-[310px] w-full rounded-[36px] p-2.5 bg-zinc-800/80 ring-1 ring-white/10 shadow-2xl shadow-black/80">
+                        <!-- Camera punch hole / Dynamic Island simulator -->
+                        <div class="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-4 bg-black rounded-full z-10"></div>
+                        <div class="rounded-[28px] overflow-hidden bg-black aspect-[9/18] relative flex items-center justify-center">
+                            <img :src="currentList[activeIndex].src" :alt="currentList[activeIndex].title"
+                                class="w-full h-full object-cover transition-all duration-300" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Banner Below Showcase -->
+                <div class="p-5 sm:p-6 bg-zinc-900/95 backdrop-blur-md border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-white">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-accent/20 text-accent font-semibold"
+                                x-text="(activeCategory === 'quest' ? 'Quest Module #' : 'Tools Module #') + (activeIndex + 1) + ' of ' + currentList.length"></span>
+                            <h3 class="font-display font-bold text-lg" x-text="currentList[activeIndex].title"></h3>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-300 mt-1 max-w-2xl" x-text="currentList[activeIndex].description"></p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" @click="prevSlide()" aria-label="Previous screenshot"
+                            class="p-2.5 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button type="button" @click="nextSlide()" aria-label="Next screenshot"
+                            class="p-2.5 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thumbnail Selector Strip -->
+            <div class="grid grid-cols-4 sm:grid-cols-4 gap-2 sm:gap-3" x-show="activeCategory === 'quest'">
+                <template x-for="(item, idx) in questScreens" :key="idx">
+                    <button type="button" @click="activeIndex = idx"
+                        class="group relative rounded-xl overflow-hidden border-2 transition-all aspect-[9/16] bg-zinc-900"
+                        :class="activeIndex === idx ? 'border-accent ring-2 ring-accent/30' : 'border-zinc-200 dark:border-zinc-800 opacity-60 hover:opacity-100'">
+                        <img :src="item.src" :alt="item.title" class="w-full h-full object-cover object-top" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors"></div>
+                        <span class="absolute bottom-1 right-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/70 text-white"
+                            x-text="idx + 1"></span>
+                    </button>
+                </template>
+            </div>
+
+            <div class="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-3" x-show="activeCategory === 'tools'">
+                <template x-for="(item, idx) in toolsScreens" :key="idx">
+                    <button type="button" @click="activeIndex = idx"
+                        class="group relative rounded-xl overflow-hidden border-2 transition-all aspect-[9/16] bg-zinc-900"
+                        :class="activeIndex === idx ? 'border-accent ring-2 ring-accent/30' : 'border-zinc-200 dark:border-zinc-800 opacity-60 hover:opacity-100'">
+                        <img :src="item.src" :alt="item.title" class="w-full h-full object-cover object-top" />
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors"></div>
+                        <span class="absolute bottom-1 right-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/70 text-white"
+                            x-text="idx + 1"></span>
+                    </button>
+                </template>
+            </div>
+        </section>
+
+        <!-- ==================== THE PROBLEM & MOTIVATIONAL SOLUTION ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="overview">
+            <div class="grid lg:grid-cols-2 gap-10 items-start">
+                <!-- Productivity & Psychological Challenge -->
+                <div class="p-8 rounded-3xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="w-10 h-10 rounded-xl bg-orange-500/10 text-accent flex items-center justify-center font-bold font-mono mb-4">
+                        01
+                    </div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-3">
+                        The Productivity Fatigue Problem
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                        Traditional to-do list applications often suffer from high user drop-off and procrastination due to rigid, uninspiring design patterns:
+                    </p>
+                    <ul class="space-y-3 text-xs text-zinc-700 dark:text-zinc-300">
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Chore Association &amp; Guilt:</strong> Standard checklists feel like an exhausting wall of obligations, creating friction and task aversion rather than proactive momentum.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Missing Dopamine Reinforcement:</strong> Checking off an item offers zero feedback or sense of growth, failing to leverage positive behavioral gamification loops.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Network Latency &amp; Cloud Clutter:</strong> Many modern productivity apps require complex cloud accounts, experiencing startup lag and failing during offline transit.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0"></span>
+                            <span><strong>Disjointed Task Breakdown:</strong> Users struggle when large goals lack progressive subtasks with visible micro-progress indicators.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Digitalized Gamified Solution -->
+                <div class="p-8 rounded-3xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <div class="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center font-bold font-mono mb-4">
+                        02
+                    </div>
+                    <h2 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-3">
+                        The Gamified Quest Solution
+                    </h2>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                        <strong>TASUKU</strong> reinvents daily organization by combining clean software engineering with engaging anime role-playing progression:
+                    </p>
+                    <div class="space-y-3 text-xs text-zinc-700 dark:text-zinc-300">
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Gamified Level &amp; EXP Progression Engine</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Every completed quest awards experience points (EXP) that directly increase player rank, converting everyday chores into rewarding character milestones.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Granular Subtask Checklist with Progress Tracking</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">Complex goals are partitioned into subtasks with real-time percentage progress bars, giving immediate visual feedback for gradual completion.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Zero-Latency Hive NoSQL Offline Persistence</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">All data operations execute instantaneously against local Hive boxes without network dependency, ensuring rapid startup and complete privacy.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60">
+                            <div class="font-bold text-zinc-900 dark:text-white mb-1">Integrated Calendar &amp; Weekly Trend Analytics</div>
+                            <p class="text-zinc-600 dark:text-zinc-400">TableCalendar view with daily quest markers paired with FL Chart weekly productivity analytics to identify peak momentum days.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SYSTEM ARCHITECTURE & SYNOPSIS ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20" id="architecture">
+            <div class="border-t border-zinc-100 dark:border-zinc-800 pt-16">
+                <span class="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Engineering Overview &bull; Synopsis</span>
+                <h2 class="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white mt-1 mb-4">
+                    Software Architecture &amp; System Overview
+                </h2>
+                <p class="text-sm text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed mb-10">
+                    TASUKU is structured around a decoupled multi-layer Flutter architecture that separates UI presentation widgets, reactive state management (Provider), local NoSQL persistence (Hive), and background system services (Local Notifications). This design ensures that high-frequency UI animations run at a smooth 60fps without triggering unnecessary database reads or widget tree re-evaluations.
+                </p>
+
+                <!-- Architecture 3-Tier Grid -->
+                <div class="grid md:grid-cols-3 gap-6 mb-10">
+                    <!-- Layer 1: Presentation & Theme -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-pink-500 text-xs font-mono font-semibold mb-2">[Presentation &amp; UI Layer]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Flutter Material 3 &amp; Anime Theme
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Responsive widgets styled with a bespoke anime aesthetic. Integrates <code class="text-accent font-mono text-[11px]">SakuraPetalsOverlay</code> with particle physics, dynamic EXP progress bars, time-aware greetings (<em class="text-zinc-800 dark:text-zinc-200">Ohayou/Konnichiwa/Konbanwa</em>), and full light/dark themes.
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            60fps Particles &bull; Material You &bull; Custom Mascot &bull; Responsive Slivers
+                        </div>
+                    </div>
+
+                    <!-- Layer 2: State Management -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-accent text-xs font-mono font-semibold mb-2">[State Management &amp; Logic]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Scoped Provider Architecture
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Employs <code class="text-accent font-mono text-[11px]">TaskProvider</code> and <code class="text-accent font-mono text-[11px]">CalendarProvider</code> to manage quest lifecycle, EXP level calculations, date filtering, and subtask mutations with fine-grained reactivity.
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            ChangeNotifier &bull; Scoped Consumers &bull; Decoupled Rebuilds
+                        </div>
+                    </div>
+
+                    <!-- Layer 3: Persistence & Native Services -->
+                    <div class="p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-emerald-500 text-xs font-mono font-semibold mb-2">[Persistence &amp; Services]</div>
+                            <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">
+                                Hive NoSQL &amp; Native Alerts
+                            </h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+                                Binary key-value storage via Hive with custom <code class="text-accent font-mono text-[11px]">TaskModelAdapter</code>. Combined with <code class="text-accent font-mono text-[11px]">NotificationService</code> for exact timezone-aware alarms and Android 13+ runtime permissions.
+                            </p>
+                        </div>
+                        <div class="pt-3 border-t border-zinc-200/50 dark:border-zinc-800 text-[11px] font-mono text-zinc-500">
+                            Hive TypeAdapters &bull; Exact Zoned Schedule &bull; Zero Network Overhead
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Architectural Subsystems Breakdown -->
+                <div class="mb-10">
+                    <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-4">
+                        Core System Subsystems
+                    </h3>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 01</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Gamified Quest &amp; Level Engine</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Formulates user level through mathematical progression: <code class="text-accent font-mono text-[11px]">(completedCount ~/ 3) + 1</code>. Updates EXP bar in real-time upon completing or reopening quests.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 02</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Nested Subtask Checklists</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Encodes checklist items into structured JSON strings on <code class="text-accent font-mono text-[11px]">TaskModel</code>. Automatically evaluates dynamic completion ratios (<code class="text-accent font-mono text-[11px]">completedSubtasks / totalSubtasks</code>).
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 03</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Hive NoSQL Storage Engine</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Generates compile-time binary type adapters via <code class="text-accent font-mono text-[11px]">build_runner</code>. Performs instant in-memory CRUD operations and auto-saves state modifications directly to disk.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 04</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Timezone Reminder Alerts</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Initializes timezone databases to register native exact alarms via <code class="text-accent font-mono text-[11px]">zonedSchedule</code>, generating distinct notification IDs from hash codes to reliably fire even when idle.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 05</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">Table Calendar Planning</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Integrates customizable calendar headers and date marker decorators. Allows users to switch between monthly and bi-weekly views to quickly inspect missions scheduled on specific dates.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                            <div class="text-accent font-mono text-xs font-semibold mb-1">Subsystem 06</div>
+                            <h4 class="font-bold text-sm text-zinc-900 dark:text-white mb-1.5">FL Chart Weekly Analytics</h4>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                Aggregates completed vs pending task metrics across 7-day intervals. Renders clean bar and line charts to give users clear visibility into their daily productivity habits.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Architecture Highlights Snippets -->
+                <div class="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 text-zinc-300 mb-10">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-zinc-800">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+                            <span class="text-xs font-mono text-zinc-400 ml-2">lib/models/task_model.dart &bull; Subtask Progress Calculation</span>
+                        </div>
+                        <span class="text-[11px] font-mono text-accent">Dart &bull; HiveObject</span>
+                    </div>
+                    <pre class="font-mono text-xs leading-relaxed overflow-x-auto text-zinc-300"><code><span class="text-pink-400">@HiveType</span>(typeId: <span class="text-yellow-300">0</span>)
+<span class="text-blue-400">class</span> <span class="text-yellow-400">TaskModel</span> <span class="text-blue-400">extends</span> <span class="text-green-400">HiveObject</span> {
+  <span class="text-pink-400">@HiveField</span>(<span class="text-yellow-300">0</span>) <span class="text-blue-400">String</span> id;
+  <span class="text-pink-400">@HiveField</span>(<span class="text-yellow-300">1</span>) <span class="text-blue-400">String</span> title;
+  <span class="text-pink-400">@HiveField</span>(<span class="text-yellow-300">3</span>) <span class="text-blue-400">DateTime</span> dueDate;
+  <span class="text-pink-400">@HiveField</span>(<span class="text-yellow-300">5</span>) <span class="text-blue-400">bool</span> isDone;
+  <span class="text-pink-400">@HiveField</span>(<span class="text-yellow-300">9</span>) <span class="text-blue-400">String</span> subtasksRaw;
+
+  <span class="text-zinc-500">// Dynamic subtask checklist progress calculation</span>
+  <span class="text-blue-400">int</span> <span class="text-blue-400">get</span> totalSubtasks => subtasks.length;
+  <span class="text-blue-400">int</span> <span class="text-blue-400">get</span> completedSubtasks => subtasks.where((s) => s.isDone).length;
+  <span class="text-blue-400">double</span> <span class="text-blue-400">get</span> subtaskProgress =>
+      totalSubtasks == <span class="text-yellow-300">0</span> ? <span class="text-yellow-300">0.0</span> : completedSubtasks / totalSubtasks;
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TECH STACK STRIP ==================== -->
+        <section class="max-w-6xl mx-auto px-6 mb-20">
+            <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-6">
+                Technology Stack &amp; Libraries
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <span class="text-xs font-mono text-accent font-semibold block mb-1">Framework</span>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white">Flutter 3.x</h4>
+                    <p class="text-[11px] text-zinc-500 mt-0.5">Cross-platform mobile SDK</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <span class="text-xs font-mono text-accent font-semibold block mb-1">Language</span>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white">Dart</h4>
+                    <p class="text-[11px] text-zinc-500 mt-0.5">Null-safe object-oriented language</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <span class="text-xs font-mono text-accent font-semibold block mb-1">Local Database</span>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white">Hive NoSQL</h4>
+                    <p class="text-[11px] text-zinc-500 mt-0.5">Ultra-fast binary storage</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <span class="text-xs font-mono text-accent font-semibold block mb-1">State Pattern</span>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white">Provider</h4>
+                    <p class="text-[11px] text-zinc-500 mt-0.5">Scoped state management</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <span class="text-xs font-mono text-accent font-semibold block mb-1">Calendar</span>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white">Table Calendar</h4>
+                    <p class="text-[11px] text-zinc-500 mt-0.5">Custom date markers &amp; planning</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <span class="text-xs font-mono text-accent font-semibold block mb-1">Push Alerts</span>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white">Local Notifications</h4>
+                    <p class="text-[11px] text-zinc-500 mt-0.5">Timezone scheduled reminders</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <span class="text-xs font-mono text-accent font-semibold block mb-1">Data Charts</span>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white">FL Chart</h4>
+                    <p class="text-[11px] text-zinc-500 mt-0.5">Weekly completion trends</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+                    <span class="text-xs font-mono text-accent font-semibold block mb-1">UI System</span>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white">Material 3</h4>
+                    <p class="text-[11px] text-zinc-500 mt-0.5">Anime theme &amp; particle canvas</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== CALL TO ACTION ==================== -->
+        <section class="py-20 border-t border-zinc-100 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-900/40">
+            <div class="max-w-4xl mx-auto px-6 text-center space-y-6">
+                <p class="text-xs font-medium text-accent tracking-widest uppercase">Open Source Repository</p>
+                <h2 class="font-display font-bold text-3xl md:text-4xl text-zinc-900 dark:text-white">
+                    Explore the full codebase on GitHub
+                </h2>
+                <p class="text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+                    TASUKU is completely open-sourced. You can review the Flutter widgets, Provider state setup, Hive models, and notification configurations on GitHub.
+                </p>
+                <div class="pt-2 flex flex-wrap justify-center gap-4">
+                    <a href="https://github.com/Aiman029/Tasuku" target="_blank" rel="noopener noreferrer"
+                        class="btn-shimmer inline-flex items-center gap-2 bg-accent text-white font-medium text-sm px-7 py-3 rounded-full hover:bg-accent-light transition-colors shadow-lg shadow-accent/20">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                        </svg>
+                        <span>Open Aiman029/Tasuku</span>
+                    </a>
+                    <a href="projects.html"
+                        class="inline-flex items-center gap-2 border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium text-sm px-6 py-3 rounded-full hover:bg-white dark:hover:bg-zinc-800 transition-colors">
+                        <span>&larr; Back to All Projects</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="border-t border-zinc-200/80 dark:border-zinc-900 py-10 text-xs text-zinc-500 dark:text-zinc-400">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                &copy; 2026 Muhammad Aiman Hafiz Bin Rosli &bull; Bachelor of Software Engineering (Hons), UPSI
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="../index.html" class="hover:text-accent transition-colors">Home</a>
+                <a href="projects.html" class="hover:text-accent transition-colors">Projects</a>
+                <a href="https://github.com/Aiman029/Tasuku" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">GitHub</a>
+                <a href="#hero" class="hover:text-accent transition-colors">Back to top &uarr;</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== ALPINE APP SCRIPT ==================== -->
+    <script>
+        function tasukuCaseStudyApp() {
+            return {
+                dark: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+                scrolled: false,
+                activeCategory: 'quest',
+                activeIndex: 0,
+
+                questScreens: [
+                    {
+                        title: 'Quest Dashboard & Real-Time EXP Level Progress',
+                        description: 'Primary quest interface displaying player level milestones, EXP progress bar towards the next rank, dynamic time-aware anime greetings (Ohayou/Konnichiwa/Konbanwa), category filter chips, and quest completion status.',
+                        src: '../assets/tasuku/appshome.png'
+                    },
+                    {
+                        title: 'Dynamic Task & Subtask Checklist Modal',
+                        description: 'Task configuration bottom sheet allowing users to define quest titles, descriptions, due dates, reminder times, priority tiers (High, Medium, Low), category tags, and nested subtask checklists.',
+                        src: '../assets/tasuku/addlist.png'
+                    },
+                    {
+                        title: 'Task Execution & Checklist Verification',
+                        description: 'Detailed quest review screen showing real-time subtask completion percentages, dynamic status toggling, and clean visual progress bars.',
+                        src: '../assets/tasuku/output.png'
+                    },
+                    {
+                        title: 'Complete Application Ecosystem Mockup',
+                        description: 'High-level multi-screen compilation illustrating the cohesive anime visual aesthetic, intuitive typography, and seamless transitions across all core mobile views.',
+                        src: '../assets/tasuku/overall.png'
+                    }
+                ],
+
+                toolsScreens: [
+                    {
+                        title: 'Table Calendar Schedule Planner',
+                        description: 'Interactive monthly and bi-weekly calendar powered by table_calendar with custom daily event markers, enabling fast day-by-day task planning and schedule inspection.',
+                        src: '../assets/tasuku/calendar.png'
+                    },
+                    {
+                        title: 'Weekly Productivity Analytics & Trends',
+                        description: 'Visual analytics dashboard engineered with FL Chart to highlight weekly completion momentum, task completion ratios, and productivity velocity.',
+                        src: '../assets/tasuku/weeklyanalytics.png'
+                    },
+                    {
+                        title: 'Anime-Themed Splash Screen',
+                        description: 'Branded launch experience featuring custom title typography, mascot branding, and physics-driven floating sakura petal animations.',
+                        src: '../assets/tasuku/splashscreen.png'
+                    }
+                ],
+
+                get currentList() {
+                    return this.activeCategory === 'quest' ? this.questScreens : this.toolsScreens;
+                },
+
+                init() {
+                    window.addEventListener('scroll', () => {
+                        this.scrolled = window.scrollY > 20;
+                    });
+                },
+
+                toggleTheme() {
+                    this.dark = !this.dark;
+                    if (this.dark) {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    }
+                },
+
+                nextSlide() {
+                    this.activeIndex = (this.activeIndex + 1) % this.currentList.length;
+                },
+
+                prevSlide() {
+                    this.activeIndex = (this.activeIndex - 1 + this.currentList.length) % this.currentList.length;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
