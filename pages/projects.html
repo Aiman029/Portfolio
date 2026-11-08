@@ -73,12 +73,10 @@
                 <span class="flex items-center"><span class="text-zinc-900 dark:text-white">aiman</span><span class="text-accent">.hafiz</span></span>
             </a>
 
-            <ul class="hidden md:flex items-center gap-8 text-sm font-medium">
-                <li><a href="../index.html#tech-stack" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Tech Stack</a></li>
+            <ul class="hidden md:flex items-center gap-7 lg:gap-8 text-sm font-medium">
                 <li><a href="projects.html" class="nav-link active text-accent font-medium">Projects</a></li>
                 <li><a href="../index.html#about" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">About</a></li>
-                <li><a href="../index.html#certifications" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Certifications</a></li>
-                <li><a href="../index.html#education" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Education</a></li>
+                <li><a href="../index.html#experience" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Experience</a></li>
                 <li><a href="../index.html#contact" class="nav-link text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Contact</a></li>
             </ul>
 
@@ -125,11 +123,9 @@
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 -translate-y-2 scale-[0.98]"
             class="md:hidden bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900 px-6 py-4 space-y-3 origin-top will-change-transform">
-            <a href="../index.html#tech-stack" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">Tech Stack</a>
             <a href="projects.html" class="block text-accent font-medium">Projects</a>
             <a href="../index.html#about" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">About</a>
-            <a href="../index.html#certifications" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">Certifications</a>
-            <a href="../index.html#education" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">Education</a>
+            <a href="../index.html#experience" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">Experience</a>
             <a href="../index.html#contact" @click="mobileMenu = false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent">Contact</a>
             <div class="pt-2 border-t border-zinc-100 dark:border-zinc-900 flex flex-col gap-2">
                 <a href="../assets/resume-muhammad-aiman-hafiz.pdf" target="_blank" download="Resume_Muhammad_Aiman_Hafiz.pdf"
@@ -159,7 +155,7 @@
                     All Projects
                 </h1>
                 <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed mb-8">
-                    An architectural catalog of software systems, interactive educational games, mobile clients, and relational backends developed during my Bachelor of Software Engineering at UPSI.
+                    An architectural catalog of full-stack web applications, database management systems, and relational backends developed during my Bachelor of Software Engineering at UPSI.
                 </p>
 
                 <div class="flex flex-wrap gap-2 pt-2">
@@ -578,6 +574,7 @@
             return {
                 dark: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
                 scrolled: false,
+                showBackToTop: false,
                 scrollProgress: 0,
                 mobileMenu: false,
                 activeFilter: 'all',
@@ -640,6 +637,7 @@
                         const winScroll = window.scrollY || document.documentElement.scrollTop;
                         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
                         this.scrolled = winScroll > 20;
+                        this.showBackToTop = winScroll > 300;
                         this.scrollProgress = height > 0 ? Math.min(1, Math.max(0, winScroll / height)) : 0;
                     };
                     window.addEventListener('scroll', updateScroll, { passive: true });
@@ -649,37 +647,11 @@
 
                 filterTabs: [
                     { id: 'all', label: 'All Projects' },
-                    { id: 'game', label: 'Game & Interactive (C#)' },
-                    { id: 'mobile', label: 'Mobile Apps (Flutter)' },
                     { id: 'web', label: 'Web & Backend (PHP / Laravel)' },
                     { id: 'systems', label: 'Database & Systems' }
                 ],
 
                 projects: [
-                    {
-                        id: 7,
-                        title: 'RRH: Learn The Tale, Master The Quiz',
-                        subtitle: 'Interactive C# Educational Game & Mnemonic Learning Engine',
-                        category: 'game',
-                        categoryLabel: 'Educational Game / C#',
-                        primaryTag: 'C# / Unity',
-                        status: 'Playable on itch.io',
-                        tags: ['C#', 'State Pattern', 'Educational Tech', 'Dual Coding', 'Mnemonic Engine'],
-                        image: '../assets/rrh/rrh-main-menu.png',
-                        liveUrl: 'https://jason0912.itch.io/rrh-ltl-mtq',
-                        liveLabel: 'Play on itch.io',
-                        caseStudyUrl: 'https://www.canva.com/design/DAGqYOAO-ss/VwNRAfGRcbblZN5iuuK_2g/edit',
-                        caseStudyPage: 'rrh-case-study.html',
-                        summary: 'Interactive 2D educational game in C# engineered for the Development of Educational Package (DEP) curriculum. Combines animated fairy tale storytelling with dual coding theory, an acronym-based mnemonic framework ("R-I-D-I-N-G"), and progressive difficulty multiple-choice quizzes to foster reading comprehension and moral reasoning.',
-                        overview: 'Developed as a collaborative educational package fusing Paivio\'s Dual Coding Theory and cognitive chunking. Features a decoupled C# Finite State Machine orchestrating story narration, animated sprites, voiceover audio synchronization, and an adaptive quiz engine with instant score evaluation.',
-                        highlights: [
-                            'Engineered modular C# Finite State Machine orchestrating decoupled game scenes (Menu, Story, Mnemonic, Quiz, Results).',
-                            'Built dynamic Quiz Evaluation System with question pool randomization, Fisher-Yates button shuffling, and 3 difficulty tiers.',
-                            'Implemented synchronized media playback controller bridging narration voiceover, sprite timing, and accessibility subtitles.',
-                            'Validated with primary school learners achieving an 85%+ retention rate compared to static text reading.'
-                        ],
-                        stack: ['C#', 'Game Engine Architecture', 'Finite State Machine', 'WebGL / HTML5', 'Audio & Subtitle Sync', 'Pedagogical UX']
-                    },
                     {
                         id: 1,
                         title: 'UniWise: Educational Recommendation System',
@@ -723,113 +695,6 @@
                             'Successfully deployed live build with secure session authentication and mobile-responsive UI.'
                         ],
                         stack: ['Laravel', 'PHP 8.x', 'MySQL', 'Blade', 'CSS3', 'LiteSpeed', 'Git']
-                    },
-                    {
-                        id: 4,
-                        title: 'Mudah Sejarah',
-                        subtitle: 'Interactive Malaysian History Learning Platform & Assessment Engine',
-                        category: 'web',
-                        categories: ['web', 'systems'],
-                        categoryLabel: 'Full-Stack Web & EdTech',
-                        primaryTag: 'PHP & MySQL',
-                        status: 'Academic Project • No Client',
-                        clientNote: 'Academic Project • Independent (No External Client)',
-                        tags: ['PHP', 'MySQL', 'JavaScript (ES6)', 'REST API', 'EdTech', 'Dual Access'],
-                        image: '../assets/mudahsejarah/landpage.png',
-                        caseStudyPage: 'mudahsejarah-case-study.html',
-                        summary: 'Interactive Malaysian history learning and quiz platform engineered with PHP, MySQL, and vanilla ES6 JavaScript. Features era-based learning modules, randomized 10-question timed quizzes, immediate answer evaluation recaps, and a multi-tiered competitive scoreboard.',
-                        overview: 'Developed as an independent academic software engineering project (no external client) to transform secondary school Malaysian history education into an engaging, gamified digital experience. The system adopts a decoupled 3-tier architecture with dual user roles (Guest vs. Authenticated Student), providing open exploration for guest learners while persisting student quiz attempts, average scores, and time-filtered leaderboard rankings through normalized MySQL backends.',
-                        highlights: [
-                            'Engineered 3-tier web architecture combining modular PHP RESTful API endpoints, MySQL persistence, and vanilla ES6 client without heavy frontend frameworks.',
-                            'Built dynamic Quiz Evaluation System featuring 50+ categorized questions, 10-question randomized test generator, countdown timer, and comprehensive answer review recaps.',
-                            'Designed normalized MySQL database schema handling user credentials, quiz attempts, historical records, and dynamic ranking filters (Today, Week, Month, All-Time).',
-                            'Implemented dual-access state model: barrier-free learning notes and practice quizzes for guest users, and secure BCrypt authenticated session tracking for registered students.',
-                            'Structured pedagogical study strategy and mnemonic tutorial modules aiding student retention of historical chronologies and examination answering techniques.'
-                        ],
-                        stack: ['PHP 8.x', 'MySQL', 'JavaScript (ES6)', 'HTML5 / CSS3', 'REST API', 'Canvas API', 'BCrypt'],
-                        academic: {
-                            course: 'DER3073: Software Engineering / Requirements Engineering',
-                            institution: 'Universiti Pendidikan Sultan Idris (UPSI)',
-                            supervisor: 'Independent Academic Project (No External Client)'
-                        },
-                        screensTitle: 'System Screens & Interactive Modules',
-                        screens: {
-                            overview: {
-                                tabLabel: 'Home & Topics',
-                                title: 'Platform Landing & Historical Topic Directory',
-                                image: '../assets/mudahsejarah/landpage.png',
-                                description: 'Heritage-themed landing interface presenting Malaysian history eras (Kesultanan Melayu Melaka, Zaman Penjajahan, Perjuangan Kemerdekaan, Malaysia Merdeka) with interactive particle animations and platform metrics.'
-                            },
-                            quiz: {
-                                tabLabel: 'Quiz Engine',
-                                title: 'Interactive Quiz Assessment Engine',
-                                image: '../assets/mudahsejarah/Quiz.png',
-                                description: 'Real-time quiz interface featuring countdown timer, randomized questions from the 50-item question bank, responsive answer selection cards, and instant progress counters.'
-                            },
-                            recap: {
-                                tabLabel: 'Answer Recap',
-                                title: 'Automated Scoring & Detailed Answer Review',
-                                image: '../assets/mudahsejarah/answerrecap.png',
-                                description: 'Post-quiz diagnostic review breaking down total score percentage, time elapsed, and correct vs. incorrect answers to strengthen student understanding.'
-                            },
-                            scoreboard: {
-                                tabLabel: 'Scoreboard',
-                                title: 'Competitive Leaderboard & Time-Filtered Rankings',
-                                image: '../assets/mudahsejarah/scoreboard.png',
-                                description: 'Dynamic scoreboard displaying student ranks, quiz scores, and completion timestamps with time-based filters (All-Time, Daily, Weekly, Monthly) to foster motivation.'
-                            },
-                            profile: {
-                                tabLabel: 'Student Profile',
-                                title: 'User Profile & Academic Performance Dashboard',
-                                image: '../assets/mudahsejarah/UserProfile.png',
-                                description: 'Authenticated student control panel tracking total quiz attempts, cumulative score average, personal best score, and complete chronological quiz submission logs.'
-                            }
-                        },
-                        architecture: {
-                            synopsis: 'Mudah Sejarah is engineered around a decoupled 3-tier web architecture designed for lightweight, high-speed delivery without bulky frontend dependencies. The presentation layer employs modular ES6 JavaScript and an optimized Canvas particle engine; the application layer uses stateless PHP RESTful API endpoints for authentication, scoring, and leaderboard queries; and the data layer utilizes a normalized MySQL relational schema enforcing student attempt histories and time-interval ranking constraints.',
-                            scope: 'Secondary School Malaysian History Syllabus (Form 1–5)',
-                            clientNote: 'Independent Academic Project (No External Client)',
-                            subsystems: [
-                                'Dual-Access Authentication Subsystem (Guest Access vs BCrypt Hashed Student Sessions)',
-                                'Era-Based Learning Material Subsystem (Structured Modules & Learning Objectives)',
-                                'Dynamic Quiz Engine Subsystem (10-Question Randomized Generator & Countdown Timer)',
-                                'Temporal Scoreboard Subsystem (SQL Date Interval Filters: Today, Week, Month, All-Time)',
-                                'Pedagogical Tutorial Subsystem (Exam Tactics & Mnemonic Memorization Frameworks)',
-                                'Student Analytics Subsystem (Cumulative Averages, Peak Scores & Submission Logs)'
-                            ]
-                        },
-                        team: [
-                            {
-                                name: 'Muhammad Aiman Hafiz Bin Rosli',
-                                matric: 'D20231106375',
-                                role: 'Quality Assurance & Technical Documentation Lead',
-                                contribution: 'Formulated test cases and performed functional verification across authentication, quiz calculation algorithms, and scoreboard data flow. Assisted with frontend UI components and authored the comprehensive Software Requirement Specification (SRS v1.0) including use case specifications and activity diagrams.'
-                            },
-                            {
-                                name: 'Muhammad Taufiq Hidayat Bin Johari',
-                                matric: 'D20231106352',
-                                role: 'Full-Stack Web Developer',
-                                contribution: 'Architected end-to-end full-stack web structure, developed modular PHP backend API endpoints (user authentication, quiz score persistence, time-filtered scoreboard ranking), and implemented asynchronous JavaScript fetch handlers.'
-                            },
-                            {
-                                name: 'Muhammad Haikal Daniel Bin Azhar',
-                                matric: 'D20231106338',
-                                role: 'UI/UX Designer & Frontend Developer',
-                                contribution: 'Designed Malaysian heritage-themed user interfaces, responsive layouts, interactive quiz cards, and dynamic canvas particle animations to elevate user engagement.'
-                            },
-                            {
-                                name: 'Afiq Zulfadhli Bin Mohd Zamzuri',
-                                matric: 'D20231106336',
-                                role: 'Curriculum & Assessment Content Specialist',
-                                contribution: 'Structured syllabus-aligned Malaysian history question banks (50+ questions), categorized learning topics by historical eras, and designed diagnostic assessment tiers targeting student comprehension gaps.'
-                            },
-                            {
-                                name: 'Nurulain Syafiqah Binti Abd Razak',
-                                matric: 'D20231106346',
-                                role: 'Lead Systems Analyst & Requirements Engineer',
-                                contribution: 'Authored system requirement specifications (SRS v1.0), mapped functional (FR001–FR005) and non-functional constraints, drafted system use case diagrams, and documented user interaction workflows.'
-                            }
-                        ]
                     },
                     {
                         id: 5,
@@ -891,79 +756,27 @@
                                 contribution: 'Assisted in business process mapping, use case diagrams, relational schema test validation, edge-case booking tests, and technical documentation.'
                             }
                         ]
-                    },
-                    {
-                        id: 6,
-                        title: 'TASUKU: Anime Quest Planner & To-Do App',
-                        subtitle: 'Gamified Task Management, Calendar & Analytics',
-                        category: 'mobile',
-                        categoryLabel: 'Mobile Application',
-                        primaryTag: 'Flutter & Hive',
-                        status: 'Open Source • Active Project',
-                        tags: ['Flutter', 'Dart', 'Hive NoSQL', 'Provider', 'Gamification', 'Table Calendar', 'FL Chart'],
-                        image: '../assets/tasuku/overall.png',
-                        githubUrl: 'https://github.com/Aiman029/Tasuku',
-                        caseStudyPage: 'tasuku-case-study.html',
-                        summary: 'A stylish, gamified productivity mobile client engineered with Flutter and Hive NoSQL. Transforms mundane task management into RPG quests with real-time EXP progression, nested subtask checklists, scheduled local notifications, custom calendar planning, and weekly completion trend analytics.',
-                        overview: 'TASUKU was conceived to eliminate task paralysis and productivity burnout by combining clean software architecture with gamified engagement. Built with a decoupled Provider state pattern, zero-latency Hive NoSQL local storage, exact timezone-aware notifications, and an anime-inspired visual interface complete with floating sakura petals.',
-                        architecture: {
-                            synopsis: 'TASUKU is built on a clean multi-layer Flutter architecture that decouples UI rendering from business logic using Provider (TaskProvider & CalendarProvider). Data persistence is executed through Hive NoSQL binary boxes with custom TypeAdapters for zero-latency startup and offline reliability, while local notifications are scheduled natively using flutter_local_notifications and the timezone library.',
-                            scope: 'Cross-Platform Mobile Task Management & Gamified Habit Tracking',
-                            clientNote: 'Personal Project & Open Source (GitHub: Aiman029/Tasuku)',
-                            subsystems: [
-                                'Gamified Quest & EXP Progression Subsystem (Calculates real-time player level and EXP progress upon task completion)',
-                                'Task & Nested Subtask Checklist Subsystem (Supports granular checklists with completion percentages, priority tiers, and category tags)',
-                                'Offline-First Hive NoSQL Storage Subsystem (Custom TypeAdapters with fast binary serialization and zero-latency retrieval)',
-                                'Local Push Notification Subsystem (Timezone-configured background reminder alerts for upcoming deadlines)',
-                                'Interactive Calendar Planning Subsystem (TableCalendar integration with event markers and date-filtered task views)',
-                                'Weekly Productivity Analytics Subsystem (FL Chart visualizations illustrating completion velocity and performance trends)'
-                            ]
-                        },
-                        screens: {
-                            home: {
-                                tabLabel: 'Quest Dashboard',
-                                title: 'Quest Dashboard & Real-Time EXP Level Progress',
-                                image: '../assets/tasuku/appshome.png',
-                                description: 'Main gamified task interface featuring user level indicators, EXP progress bar, time-aware anime greetings (Ohayou/Konnichiwa/Konbanwa), category filters, and task tiles with progress badges.'
-                            },
-                            add: {
-                                tabLabel: 'Add & Edit Quest',
-                                title: 'Task Configuration Sheet & Subtask Checklist',
-                                image: '../assets/tasuku/addlist.png',
-                                description: 'Comprehensive task creation modal allowing users to configure titles, descriptions, due dates, reminder times, priority tiers (High/Medium/Low), categories, and nested subtasks.'
-                            },
-                            calendar: {
-                                tabLabel: 'Calendar Planner',
-                                title: 'Interactive Table Calendar & Daily Task Filters',
-                                image: '../assets/tasuku/calendar.png',
-                                description: 'Visual calendar interface built with TableCalendar displaying active event markers on scheduled task dates, enabling seamless daily planning and timeline inspection.'
-                            },
-                            analytics: {
-                                tabLabel: 'Analytics & Trends',
-                                title: 'Weekly Productivity Analytics & FL Chart Visualizations',
-                                image: '../assets/tasuku/weeklyanalytics.png',
-                                description: 'Productivity statistics dashboard visualizing weekly task completion trends, productivity momentum, and finished vs pending ratios.'
-                            },
-                            overall: {
-                                tabLabel: 'Full Overview',
-                                title: 'Complete TASUKU Mobile Client Ecosystem',
-                                image: '../assets/tasuku/overall.png',
-                                description: 'High-level multi-screen showcase illustrating the cohesive visual aesthetic, anime-inspired styling, and comprehensive task management flows.'
-                            }
-                        },
-                        highlights: [
-                            'Engineered offline-first local persistence utilizing Hive NoSQL with custom TypeAdapters for zero-latency serialization.',
-                            'Designed RPG quest gamification calculating real-time EXP and level progression when tasks are completed.',
-                            'Built scheduled task alarms and daily reminders leveraging flutter_local_notifications and timezone configuration.',
-                            'Integrated interactive calendar scheduling with table_calendar and weekly completion trend analytics powered by fl_chart.',
-                            'Crafted dynamic anime-inspired aesthetics with floating sakura petal physics, time-aware greetings, and responsive themes.'
-                        ],
-                        stack: ['Flutter', 'Dart', 'Hive NoSQL', 'Provider', 'Table Calendar', 'Local Notifications', 'FL Chart', 'Material 3']
                     }
                 ]
             }
         }
     </script>
+
+    <!-- Floating Back to Top Button -->
+    <button type="button" @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+        x-show="showBackToTop" x-cloak
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-3 scale-75"
+        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+        x-transition:leave-end="opacity-0 translate-y-3 scale-75"
+        class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 group w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-200 hover:bg-accent hover:border-accent hover:text-white dark:hover:bg-accent dark:hover:border-accent dark:hover:text-white shadow-lg shadow-black/10 dark:shadow-black/40 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer"
+        title="Back to top" aria-label="Back to top">
+        <svg class="w-5 h-5 transition-transform duration-200 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
 </body>
 
 </html>
